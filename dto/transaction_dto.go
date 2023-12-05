@@ -13,8 +13,8 @@ type ListTransactionsReq struct {
 	FilterEnd       *string
 	SortBy          *string
 	SortType        *string
-	PaginationLimit *int
-	PaginationPage  *int
+	PaginationLimit *string
+	PaginationPage  *string
 }
 
 type TopUpReq struct {
@@ -28,8 +28,8 @@ type TransferReq struct {
 	Description  string          `json:"description,omitempty"`
 }
 
-func (tr *TopUpReq) ToTransactionModel(wallet model.Wallet) *model.Transaction {
-	return &model.Transaction{
+func (tr *TopUpReq) ToTransactionModel(wallet *model.Wallet) model.Transaction {
+	return model.Transaction{
 		WalletId:        wallet.ID,
 		TransactionType: model.TransactionTypes(model.TopUp),
 		SourceOfFund:    model.SourceOfFunds(tr.SourceOfFund),

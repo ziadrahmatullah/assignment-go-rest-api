@@ -44,6 +44,7 @@ var (
 
 	ErrWalletNotFound = NewCustomError(http.StatusBadRequest, "wallet not found")
 
+	ErrInvalidPagination         = NewCustomError(http.StatusBadRequest, "invalid pagination")
 	ErrFindListTransactionQuery  = NewCustomError(http.StatusInternalServerError, "find list transaction query error")
 	ErrSortByTransactionQuery    = NewCustomError(http.StatusBadRequest, "wrong key for sorting")
 	ErrSortTypeTrasacntionQueqry = NewCustomError(http.StatusBadRequest, "wrong sort type for sorting")

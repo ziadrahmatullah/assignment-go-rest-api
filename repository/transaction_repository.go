@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
@@ -50,7 +51,10 @@ func (tr *transactionRepository) FindListTransaction(ctx context.Context, req dt
 	if err != nil {
 		return nil, err
 	}
-	paginationSql := tr.PaginationTransaction(*req.PaginationLimit, *req.PaginationPage)
+	paginationSql, err := tr.PaginationTransaction(*req.PaginationLimit, *req.PaginationPage)
+	if err != nil {
+		return nil, err
+	}
 	raw += searchSql + filterSql + sortSql + paginationSql
 	err = tr.db.WithContext(ctx).Raw(raw).Scan(&transactions).Error
 	if err != nil {
@@ -98,11 +102,19 @@ func (tr *transactionRepository) SortByTransaction(sortByWord string, sort strin
 	return sql, nil
 }
 
-func (tr *transactionRepository) PaginationTransaction(limit int, page int) (sql string) {
-	if limit == 0{
-		return ""
+func (tr *transactionRepository) PaginationTransaction(limit string, page string) (sql string, err error) {
+	if limit == "" {
+		return fmt.Sprintf("LIMIT %d", 10), nil
 	}
-	sql = fmt.Sprintf("LIMIT %d OFFSET %d", limit, (page-1)*limit)
+	intLimit, err := strconv.Atoi(limit)
+	if err != nil {
+		return "", apperror.ErrInvalidPagination
+	}
+	intPage, err := strconv.Atoi(page)
+	if err != nil {
+		return "", apperror.ErrInvalidPagination
+	}
+	sql = fmt.Sprintf("LIMIT %d OFFSET %d", intLimit, (intPage-1)*intLimit)
 	return
 }
 

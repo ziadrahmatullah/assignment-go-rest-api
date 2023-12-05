@@ -25,7 +25,7 @@ func NewWalletRepository(db *gorm.DB) WalletRepository {
 }
 
 func (wr *walletRepository) FindWalletById(ctx context.Context, id uint) (wallet *model.Wallet, err error) {
-	result := wr.db.Table("wallets").Where("id = ?", id).Find(&wallet)
+	result := wr.db.WithContext(ctx).Table("wallets").Where("id = ?", id).Find(&wallet)
 	if result.Error != nil {
 		return nil, apperror.ErrFindWalletByIdQuery
 	}
@@ -36,7 +36,7 @@ func (wr *walletRepository) FindWalletById(ctx context.Context, id uint) (wallet
 }
 
 func (wr *walletRepository) FindWalletByWalletNumber(ctx context.Context, walletNumber string) (wallet *model.Wallet, err error) {
-	result := wr.db.Table("wallets").Where("wallet_number = ?", walletNumber).Find(&wallet)
+	result := wr.db.WithContext(ctx).Table("wallets").Where("wallet_number = ?", walletNumber).Find(&wallet)
 	if result.Error != nil {
 		return nil, apperror.ErrFindWalletByIdQuery
 	}
@@ -47,7 +47,7 @@ func (wr *walletRepository) FindWalletByWalletNumber(ctx context.Context, wallet
 }
 
 func (wr *walletRepository) FindWallet(ctx context.Context, id uint, walletNumber string) (wallet *model.Wallet, err error) {
-	result := wr.db.Table("wallets").Where("wallet_number = ? AND id = ?", walletNumber, id).Find(&wallet)
+	result := wr.db.WithContext(ctx).Table("wallets").Where("wallet_number = ? AND id = ?", walletNumber, id).Find(&wallet)
 	if result.Error != nil {
 		return nil, apperror.ErrFindWalletByIdQuery
 	}
