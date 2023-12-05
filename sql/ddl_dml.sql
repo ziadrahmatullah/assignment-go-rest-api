@@ -41,21 +41,22 @@ CREATE TABLE IF NOT EXISTS wallets(
 );
 
 CREATE TYPE source_of_funds AS ENUM ('Bank Transfer', 'Credit Card', 'Cash', 'Reward');
-CREATE TYPE transaction_types AS ENUM ('Transfer', 'Top up', 'Reward');
+CREATE TYPE transaction_types AS ENUM ('Transfer', 'Top up', 'Game Reward');
 
 CREATE TABLE IF NOT EXISTS transactions(
     id BIGSERIAL,
     wallet_id BIGINT NOT NULL,
     transaction_type transaction_types NOT NULL,
     source_of_fund source_of_funds,
-    recipient VARCHAR,
+    recipient_id BIGINT,
     amount INT NOT NULL,
     description VARCHAR,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (wallet_id) REFERENCES wallets(id)
+    FOREIGN KEY (wallet_id) REFERENCES wallets(id),
+    FOREIGN KEY (recipient_id) REFERENCES wallets(id)
 );
 
 CREATE TABLE IF NOT EXISTS boxs(
@@ -109,18 +110,18 @@ VALUES
     (2,'Top up','Cash', 400000, 'Genshin',  '2023-03-05', '2023-03-05'),
     (5,'Top up','Bank Transfer', 600000, 'Genshin', '2023-02-01', '2023-02-01');
 
-INSERT INTO transactions (wallet_id,transaction_type, amount, description,recipient, created_at, updated_at)
+INSERT INTO transactions (wallet_id,transaction_type, amount, description,recipient_id, created_at, updated_at)
 VALUES 
-    (1, 'Transfer', 100000, 'Ngasih', '7000000000002', '2022-11-03', '2022-11-03'),
-    (2,'Transfer', 100000, 'Ngasih', '7000000000003', '2022-10-25', '2022-10-25'),
-    (2,'Transfer', 100000, 'Ngasih', '7000000000001', '2022-09-10', '2022-09-10'),
-    (3, 'Transfer',100000, 'Ngasih', '7000000000005', '2022-08-15', '2022-08-15'),
-    (1, 'Transfer',100000, 'Ngasih', '7000000000003', '2022-07-05', '2022-07-05'),
-    (5, 'Transfer',100000, 'Ngasih', '7000000000001', '2022-06-20', '2022-06-20'),
-    (5, 'Transfer',100000, 'Ngasih', '7000000000004', '2022-05-10', '2022-05-10'),
-    (5, 'Transfer',100000, 'Ngasih', '7000000000003', '2023-04-15', '2023-04-15'),
-    (4, 'Transfer',100000, 'Ngasih', '7000000000002', '2023-03-20', '2023-03-20'),
-    (3,'Transfer', 100000, 'Ngasih', '7000000000002', '2023-02-05', '2023-02-05');
+    (1, 'Transfer', 100000, 'Ngasih', 2, '2022-11-03', '2022-11-03'),
+    (2,'Transfer', 100000, 'Ngasih', 3, '2022-10-25', '2022-10-25'),
+    (2,'Transfer', 100000, 'Ngasih', 1, '2022-09-10', '2022-09-10'),
+    (3, 'Transfer',100000, 'Ngasih', 5, '2022-08-15', '2022-08-15'),
+    (1, 'Transfer',100000, 'Ngasih', 3, '2022-07-05', '2022-07-05'),
+    (5, 'Transfer',100000, 'Ngasih', 1, '2022-06-20', '2022-06-20'),
+    (5, 'Transfer',100000, 'Ngasih', 4, '2022-05-10', '2022-05-10'),
+    (5, 'Transfer',100000, 'Ngasih', 3, '2023-04-15', '2023-04-15'),
+    (4, 'Transfer',100000, 'Ngasih', 2, '2023-03-20', '2023-03-20'),
+    (3,'Transfer', 100000, 'Ngasih', 2, '2023-02-05', '2023-02-05');
 
 INSERT INTO boxs (reward_amount, created_at, updated_at)
 VALUES
