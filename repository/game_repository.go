@@ -11,7 +11,7 @@ import (
 )
 
 type GameRepository interface {
-	FindAllBoxs(context.Context) ([]dto.GameBoxsRes, error)
+	FindAllBoxes(context.Context) ([]dto.GameBoxesRes, error)
 	FindBoxById(context.Context, uint) (*model.Box, error)
 	FindAttempt(context.Context, model.Wallet) (*dto.AttemptRes, error)
 	ChooseBox(context.Context, model.Box, model.Wallet) (*dto.ChooseBoxRes, error)
@@ -27,16 +27,16 @@ func NewGameRepository(db *gorm.DB) GameRepository {
 	}
 }
 
-func (gr *gameRepository) FindAllBoxs(ctx context.Context) (boxs []dto.GameBoxsRes, err error) {
-	err = gr.db.WithContext(ctx).Table("boxs").Find(&boxs).Error
+func (gr *gameRepository) FindAllBoxes(ctx context.Context) (boxes []dto.GameBoxesRes, err error) {
+	err = gr.db.WithContext(ctx).Table("boxes").Find(&boxes).Error
 	if err != nil {
-		return nil, apperror.ErrFindBoxsQuery
+		return nil, apperror.ErrFindBoxesQuery
 	}
-	return boxs, nil
+	return boxes, nil
 }
 
 func (gr *gameRepository) FindBoxById(ctx context.Context, id uint) (box *model.Box, err error) {
-	result := gr.db.WithContext(ctx).Table("boxs").Where("id = ?", id).Find(&box)
+	result := gr.db.WithContext(ctx).Table("boxes").Where("id = ?", id).Find(&box)
 	if result.Error != nil {
 		return nil, apperror.ErrFindBoxByIdQuery
 	}

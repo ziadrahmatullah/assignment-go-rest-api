@@ -53,7 +53,7 @@ var (
 	ErrInvalidSourceOfFund = NewCustomError(http.StatusBadRequest, "invalid source of fund")
 	ErrWalletNotFound      = NewCustomError(http.StatusBadRequest, "wallet not found")
 
-	ErrFindBoxsQuery    = NewCustomError(http.StatusInternalServerError, "find boxs query error")
+	ErrFindBoxesQuery   = NewCustomError(http.StatusInternalServerError, "find boxes query error")
 	ErrFindAttemptQuery = NewCustomError(http.StatusInternalServerError, "find attempt query error")
 	ErrFindBoxByIdQuery = NewCustomError(http.StatusInternalServerError, "find box by id query error")
 

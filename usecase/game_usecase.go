@@ -15,15 +15,15 @@ type gameUsecase struct {
 	wr repository.WalletRepository
 }
 
-func NewGameUsecase (gr repository.GameRepository, wr repository.WalletRepository) GameUsecase{
+func NewGameUsecase(gr repository.GameRepository, wr repository.WalletRepository) GameUsecase {
 	return &gameUsecase{
 		gr: gr,
 		wr: wr,
 	}
 }
 
-func (gu *gameUsecase) GetAllBoxs(ctx context.Context) ([]dto.GameBoxsRes, error) {
-	return gu.gr.FindAllBoxs(ctx)
+func (gu *gameUsecase) GetAllBoxes(ctx context.Context) ([]dto.GameBoxesRes, error) {
+	return gu.gr.FindAllBoxes(ctx)
 }
 
 func (gu *gameUsecase) GetRemainingAttempt(ctx context.Context, userId uint) (*dto.AttemptRes, error) {

@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS transactions(
     FOREIGN KEY (wallet_id) REFERENCES wallets(id)
 );
 
-CREATE TABLE IF NOT EXISTS boxs(
+CREATE TABLE IF NOT EXISTS boxes(
     id BIGSERIAL,
     reward_amount DECIMAL NOT NULL CHECK (reward_amount > 0),
     created_at TIMESTAMP NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS games(
     updated_at TIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,
     PRIMARY KEY (box_id, wallet_id),
-    FOREIGN KEY (box_id) REFERENCES boxs(id),
+    FOREIGN KEY (box_id) REFERENCES boxes(id),
     FOREIGN KEY (wallet_id) REFERENCES wallets(id)
 );
 
@@ -142,7 +142,7 @@ VALUES
     (4, 'Transfer',100000, 'Ngasih', '7000000000004','7000000000002', '2023-03-20', '2023-03-20'),
     (3,'Transfer', 100000, 'Ngasih', '7000000000003','7000000000002', '2023-02-05', '2023-02-05');
 
-INSERT INTO boxs (reward_amount, created_at, updated_at)
+INSERT INTO boxes (reward_amount, created_at, updated_at)
 VALUES
     (300000, NOW(), NOW()),
     (400000, NOW(), NOW()),

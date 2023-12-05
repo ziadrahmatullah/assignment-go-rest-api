@@ -11,4 +11,3 @@ func NewGameHandler(gu usecase.GameUsecase) *GameHandler{
 		gu: gu,
 	}
 }
-

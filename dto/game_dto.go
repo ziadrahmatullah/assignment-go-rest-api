@@ -6,7 +6,7 @@ type GameBoxReq struct {
 	BoxId uint `json:"box_id"`
 }
 
-type GameBoxsRes struct {
+type GameBoxesRes struct {
 	ID uint `json:"id"`
 }
 
