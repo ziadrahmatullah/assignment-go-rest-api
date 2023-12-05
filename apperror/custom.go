@@ -44,6 +44,7 @@ var (
 	ErrInvalidEmail           = NewCustomError(http.StatusBadRequest, "invalid email")
 
 	ErrFindWalletByIdQuery = NewCustomError(http.StatusInternalServerError, "find wallet by id query error")
+	ErrNewWalletQuery      = NewCustomError(http.StatusInternalServerError, "new wallet query error")
 
 	ErrInvalidPagination         = NewCustomError(http.StatusBadRequest, "invalid pagination")
 	ErrFindListTransactionQuery  = NewCustomError(http.StatusInternalServerError, "find list transaction query error")
@@ -57,6 +58,7 @@ var (
 
 	ErrFindBoxesQuery   = NewCustomError(http.StatusInternalServerError, "find boxes query error")
 	ErrFindAttemptQuery = NewCustomError(http.StatusInternalServerError, "find attempt query error")
+	ErrNewAttemptQuery  = NewCustomError(http.StatusInternalServerError, "new attempt query error")
 	ErrFindBoxByIdQuery = NewCustomError(http.StatusInternalServerError, "find box by id query error")
 
 	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")

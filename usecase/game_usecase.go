@@ -16,12 +16,14 @@ type GameUsecase interface {
 type gameUsecase struct {
 	gr repository.GameRepository
 	wr repository.WalletRepository
+	ar repository.AttemptRepository
 }
 
-func NewGameUsecase(gr repository.GameRepository, wr repository.WalletRepository) GameUsecase {
+func NewGameUsecase(gr repository.GameRepository, wr repository.WalletRepository, ar repository.AttemptRepository) GameUsecase {
 	return &gameUsecase{
 		gr: gr,
 		wr: wr,
+		ar: ar,
 	}
 }
 
@@ -34,7 +36,7 @@ func (gu *gameUsecase) GetRemainingAttempt(ctx context.Context, userId uint) (*d
 	if err != nil {
 		return nil, err
 	}
-	return gu.gr.FindAttempt(ctx, *wallet)
+	return gu.ar.FindAttempt(ctx, *wallet)
 }
 
 func (gu *gameUsecase) ChooseBox(ctx context.Context, req dto.GameBoxReq, userId uint) (*dto.ChooseBoxRes, error) {

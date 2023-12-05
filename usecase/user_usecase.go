@@ -11,38 +11,50 @@ import (
 )
 
 type UserUsecase interface {
-	GetUserDetails(context.Context, uint)(*dto.UserDetails, error)
+	GetUserDetails(context.Context, uint) (*dto.UserDetails, error)
 	GetAllUsers(context.Context) ([]model.User, error)
 	CreateUser(context.Context, dto.RegisterReq) (*dto.RegisterRes, error)
 	UserLogin(context.Context, dto.LoginReq) (*dto.LoginRes, error)
 }
 
 type userUsecase struct {
-	userRepository repository.UserRepository
+	ur repository.UserRepository
+	wr repository.WalletRepository
+	ar repository.AttemptRepository
 }
 
-func NewUserUsecase(u repository.UserRepository) UserUsecase {
+func NewUserUsecase(u repository.UserRepository, wr repository.WalletRepository, ar repository.AttemptRepository) UserUsecase {
 	return &userUsecase{
-		userRepository: u,
+		ur: u,
+		wr: wr,
+		ar: ar,
 	}
 }
 
 func (u *userUsecase) GetUserDetails(ctx context.Context, id uint) (*dto.UserDetails, error) {
-	return u.userRepository.FindUserDetails(ctx, id)
+	return u.ur.FindUserDetails(ctx, id)
 }
 
 func (u *userUsecase) GetAllUsers(ctx context.Context) ([]model.User, error) {
-	return u.userRepository.FindUsers(ctx)
+	return u.ur.FindUsers(ctx)
 }
 
 func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterReq) (data *dto.RegisterRes, err error) {
-	user, _ := u.userRepository.FindByEmail(ctx, registerData.Email)
+	user, _ := u.ur.FindByEmail(ctx, registerData.Email)
 	if user != nil {
 		return nil, apperror.ErrEmailALreadyUsed
 	}
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(registerData.Password), 10)
 	userModel := registerData.ToUserModelRegister(string(hashPassword))
-	newUser, err := u.userRepository.NewUser(ctx, userModel)
+	newUser, err := u.ur.NewUser(ctx, userModel)
+	if err != nil {
+		return nil, err
+	}
+	newWallet, err := u.wr.NewWallet(ctx, newUser.ID)
+	if err != nil {
+		return nil, err
+	}
+	_, err = u.ar.NewAttempt(ctx, newWallet.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +63,7 @@ func (u *userUsecase) CreateUser(ctx context.Context, registerData dto.RegisterR
 }
 
 func (u *userUsecase) UserLogin(ctx context.Context, loginData dto.LoginReq) (token *dto.LoginRes, err error) {
-	user, err := u.userRepository.FindByEmail(ctx, loginData.Email)
+	user, err := u.ur.FindByEmail(ctx, loginData.Email)
 	if err != nil {
 		return nil, apperror.ErrInvalidPasswordOrEmail
 	}

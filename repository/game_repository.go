@@ -15,7 +15,6 @@ import (
 type GameRepository interface {
 	FindAllBoxes(context.Context) ([]dto.GameBoxesRes, error)
 	FindBoxById(context.Context, uint) (*model.Box, error)
-	FindAttempt(context.Context, model.Wallet) (*dto.AttemptRes, error)
 	ChooseBox(context.Context, model.Box, model.Wallet) (*dto.ChooseBoxRes, error)
 }
 
@@ -52,14 +51,6 @@ func (gr *gameRepository) FindBoxById(ctx context.Context, id uint) (box *model.
 		return nil, apperror.ErrBoxNotFound
 	}
 	return box, nil
-}
-
-func (gr *gameRepository) FindAttempt(ctx context.Context, wallet model.Wallet) (attempt *dto.AttemptRes, err error) {
-	err = gr.db.WithContext(ctx).Table("attempts").Where("wallet_id = ?", wallet.ID).Find(&attempt).Error
-	if err != nil {
-		return nil, apperror.ErrFindAttemptQuery
-	}
-	return attempt, nil
 }
 
 func (gr *gameRepository) ChooseBox(ctx context.Context, box model.Box, wallet model.Wallet) (ChoosenBox *dto.ChooseBoxRes, err error) {

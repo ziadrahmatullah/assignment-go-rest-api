@@ -10,6 +10,5 @@ type Wallet struct {
 	WalletNumber string          `gorm:"not null"`
 	Balance      decimal.Decimal `gorm:"not null"`
 	UserId       uint            `gorm:"not null"`
-	Chance       int             `gorm:"not null"`
 	User         User            `gorm:"foreignKey:user_id;references:id"`
 }

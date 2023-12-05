@@ -26,18 +26,20 @@ func main() {
 
 	addr := os.Getenv("APP_PORT")
 
-	ur := repository.NewUserRepository(db)
-	uu := usecase.NewUserUsecase(ur)
-	uh := handler.NewUserHandler(uu)
-
 	wr := repository.NewWalletRepository(db)
+
+	ar := repository.NewAttemptRepository(db)
+
+	ur := repository.NewUserRepository(db)
+	uu := usecase.NewUserUsecase(ur, wr, ar)
+	uh := handler.NewUserHandler(uu)
 
 	tr := repository.NewTransactionRepository(db)
 	tu := usecase.NewTransactionUsecase(tr, wr)
 	th := handler.NewTransactionHandler(tu)
 
 	gr := repository.NewGameRepository(db)
-	gu := usecase.NewGameUsecase(gr, wr)
+	gu := usecase.NewGameUsecase(gr, wr, ar)
 	gh := handler.NewGameHandler(gu)
 
 	rr := repository.NewResetPassTokenRepository(db)
