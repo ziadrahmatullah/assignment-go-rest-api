@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"math/rand"
+	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
@@ -31,6 +33,12 @@ func (gr *gameRepository) FindAllBoxes(ctx context.Context) (boxes []dto.GameBox
 	err = gr.db.WithContext(ctx).Table("boxes").Find(&boxes).Error
 	if err != nil {
 		return nil, apperror.ErrFindBoxesQuery
+	}
+	rand.Seed(time.Now().UnixNano())
+	n := len(boxes)
+	for i := n - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		boxes[i], boxes[j] = boxes[j], boxes[i]
 	}
 	return boxes, nil
 }

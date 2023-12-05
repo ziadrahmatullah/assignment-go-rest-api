@@ -8,6 +8,9 @@ import (
 )
 
 type GameUsecase interface {
+	GetAllBoxes(context.Context) ([]dto.GameBoxesRes, error)
+	GetRemainingAttempt(context.Context, uint) (*dto.AttemptRes, error)
+	ChooseBox(context.Context, dto.GameBoxReq, uint) (*dto.ChooseBoxRes, error)
 }
 
 type gameUsecase struct {
