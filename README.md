@@ -1,5 +1,8 @@
 # assignment-go-rest-api
 
 TODO:
-1. Repo nembak repo di transaksi
-3. User forget password
+1. benerin foreign key model, + dto yang pake model
+
+
+Asumsi:
+1. reset expire 5 menit

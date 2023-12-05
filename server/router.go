@@ -11,6 +11,7 @@ type RouterOpts struct {
 	UserHandler        *handler.UserHandler
 	TransactionHandler *handler.TransactionHandler
 	GameHandler        *handler.GameHandler
+	ResetPassToken *handler.ResetPassTokenHandler
 }
 
 func NewRouter(opts RouterOpts) *gin.Engine {
@@ -27,6 +28,8 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 	users.GET("", opts.UserHandler.HandleGetUsers)
 	users.POST("/register", opts.UserHandler.HandleUserRegister)
 	users.POST("/login", opts.UserHandler.HandleUserLogin)
+	users.POST("/reset-password", opts.ResetPassToken.HandleRequestPassReset)
+	users.PUT("/reset-password", opts.ResetPassToken.HandleApplyPassReset)
 
 	transactions := router.Group("/transactions")
 	transactions.GET("", opts.TransactionHandler.HandleGetTransactions)

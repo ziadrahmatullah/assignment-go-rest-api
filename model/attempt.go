@@ -4,5 +4,5 @@ import "gorm.io/gorm"
 
 type Attempt struct {
 	gorm.Model
-	RemainingAttempt int `gorm:"not null"`
+	RemainingAttempt int `binding:"required,min=0" gorm:"not null"`
 }

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS reset_password_tokens(
+CREATE TABLE IF NOT EXISTS reset_pass_tokens(
     id BIGSERIAL,
     token VARCHAR NOT NULL,
     expire TIMESTAMP NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS wallets(
 
 CREATE TABLE IF NOT EXISTS attempts(
     id BIGSERIAL,
-    remaining_attempt INT NOT NULL DEFAULT 0,
+    remaining_attempt INT NOT NULL DEFAULT 0 CHECK (remaining_attempt >= 0),
     wallet_id BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,

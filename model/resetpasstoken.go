@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ResetPasswordToken struct {
+type ResetPassToken struct {
 	gorm.Model
 	Token  string    `gorm:"not null"`
 	Expire time.Time `gorm:"not null"`

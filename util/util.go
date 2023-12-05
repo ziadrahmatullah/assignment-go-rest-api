@@ -1,6 +1,8 @@
 package util
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"strings"
 	"time"
 )
@@ -12,6 +14,15 @@ func ToDate(dateString string) time.Time {
 
 func RemoveNewLine(str string) string {
 	return strings.Trim(str, "\n")
+}
+
+func GenerateRandomString() string {
+	b := make([]byte, 8)
+	_, err := rand.Read(b)
+	if err != nil {
+		panic(err)
+	}
+	return base64.StdEncoding.EncodeToString(b)
 }
 
 // func ShuffleBoxes(boxes []model.Box) {

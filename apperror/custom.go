@@ -38,8 +38,10 @@ var (
 	ErrNewUserQuery         = NewCustomError(http.StatusInternalServerError, "new user query error")
 
 	ErrUserNotFound           = NewCustomError(http.StatusBadRequest, "user not found")
+	ErrEmailNotFound          = NewCustomError(http.StatusBadRequest, "email not found")
 	ErrEmailALreadyUsed       = NewCustomError(http.StatusBadRequest, "email already used")
 	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
+	ErrInvalidEmail           = NewCustomError(http.StatusBadRequest, "invalid email")
 
 	ErrFindWalletByIdQuery = NewCustomError(http.StatusInternalServerError, "find wallet by id query error")
 
@@ -58,6 +60,8 @@ var (
 	ErrFindBoxByIdQuery = NewCustomError(http.StatusInternalServerError, "find box by id query error")
 
 	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")
+
+	ErrCreateResetPassTokenQuery = NewCustomError(http.StatusInternalServerError, "create reset pass token query error")
 
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
