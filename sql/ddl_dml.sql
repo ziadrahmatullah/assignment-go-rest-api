@@ -30,7 +30,7 @@ CREATE SEQUENCE wallet_number_seq;
 CREATE TABLE IF NOT EXISTS wallets(
     id BIGSERIAL,
     wallet_number VARCHAR NOT NULL DEFAULT (concat('700',lpad(nextval('wallet_number_seq')::VARCHAR,10,'0'))),
-    balance INT NOT NULL DEFAULT 0 CHECK (balance >= 0),
+    balance DECIMAL NOT NULL DEFAULT 0 CHECK (balance >= 0),
     user_id BIGINT NOT NULL,
     chance INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS transactions(
     transaction_type transaction_types NOT NULL,
     source_of_fund source_of_funds,
     recipient_id BIGINT,
-    amount INT NOT NULL,
+    amount DECIMAL NOT NULL,
     description VARCHAR,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS transactions(
 
 CREATE TABLE IF NOT EXISTS boxs(
     id BIGSERIAL,
-    reward_amount INT NOT NULL CHECK (reward_amount > 0),
+    reward_amount DECIMAL NOT NULL CHECK (reward_amount > 0),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,

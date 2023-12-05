@@ -1,8 +1,11 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/shopspring/decimal"
+	"gorm.io/gorm"
+)
 
 type Box struct {
 	gorm.Model
-	RewardAmount int `gorm:"not null"`
+	RewardAmount decimal.Decimal `gorm:"not null"`
 }
