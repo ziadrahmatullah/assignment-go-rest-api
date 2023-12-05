@@ -11,6 +11,7 @@ import (
 )
 
 type UserUsecase interface {
+	GetUserDetails(context.Context, uint)(*dto.UserDetails, error)
 	GetAllUsers(context.Context) ([]model.User, error)
 	CreateUser(context.Context, dto.RegisterReq) (*dto.RegisterRes, error)
 	UserLogin(context.Context, dto.LoginReq) (*dto.LoginRes, error)
@@ -24,6 +25,10 @@ func NewUserUsecase(u repository.UserRepository) UserUsecase {
 	return &userUsecase{
 		userRepository: u,
 	}
+}
+
+func (u *userUsecase) GetUserDetails(ctx context.Context, id uint) (*dto.UserDetails, error) {
+	return u.userRepository.FindUserDetails(ctx, id)
 }
 
 func (u *userUsecase) GetAllUsers(ctx context.Context) ([]model.User, error) {

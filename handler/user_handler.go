@@ -30,6 +30,18 @@ func (h *UserHandler) HandleGetUsers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
+func (h *UserHandler) HandleGetUserDetails(ctx *gin.Context) {
+	resp := dto.Response{}
+	reqContext := dto.CreateContext(ctx)
+	user, err := h.userUsecase.GetUserDetails(ctx, reqContext.UserID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	resp.Data = user
+	ctx.JSON(http.StatusOK, resp)
+}
+
 func (h *UserHandler) HandleUserRegister(ctx *gin.Context) {
 	resp := dto.Response{}
 	var data dto.RegisterReq

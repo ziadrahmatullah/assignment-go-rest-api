@@ -31,10 +31,11 @@ func (ce *CustomError) ToErrorRes() ErrorRes {
 }
 
 var (
-	ErrFindUsersQuery    = NewCustomError(http.StatusInternalServerError, "find user query error")
-	ErrFindUserByIdQuery = NewCustomError(http.StatusInternalServerError, "find user by id query error")
-	ErrFindUserByEmail   = NewCustomError(http.StatusInternalServerError, "find user by email query error")
-	ErrNewUserQuery      = NewCustomError(http.StatusInternalServerError, "new user query error")
+	ErrFindUsersQuery       = NewCustomError(http.StatusInternalServerError, "find user query error")
+	ErrFindUserDetailsQuery = NewCustomError(http.StatusInternalServerError, "find user details query error")
+	ErrFindUserByIdQuery    = NewCustomError(http.StatusInternalServerError, "find user by id query error")
+	ErrFindUserByEmail      = NewCustomError(http.StatusInternalServerError, "find user by email query error")
+	ErrNewUserQuery         = NewCustomError(http.StatusInternalServerError, "new user query error")
 
 	ErrUserNotFound           = NewCustomError(http.StatusBadRequest, "user not found")
 	ErrEmailALreadyUsed       = NewCustomError(http.StatusBadRequest, "email already used")
