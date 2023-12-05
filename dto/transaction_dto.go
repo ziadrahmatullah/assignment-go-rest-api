@@ -39,8 +39,8 @@ func (tr *TopUpReq) ToTransactionModel(wallet *model.Wallet) model.Transaction {
 	}
 }
 
-func (tr *TransferReq) ToTransactionModel(wallet model.Wallet) *model.Transaction {
-	return &model.Transaction{
+func (tr *TransferReq) ToTransactionModel(wallet *model.Wallet) model.Transaction {
+	return model.Transaction{
 		WalletId:        wallet.ID,
 		TransactionType: model.TransactionTypes(model.Transfer),
 		Sender:          wallet.WalletNumber,

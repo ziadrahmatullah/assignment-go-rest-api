@@ -47,6 +47,29 @@ func (h *TransactionHandler) HandleTopUp(ctx *gin.Context) {
 		return
 	}
 	reqContext := dto.CreateContext(ctx)
-	transactionRes := h.tu.TopUp(ctx, topUp, reqContext.UserID)
-	
+	transactionRes, err := h.tu.TopUp(ctx, topUp, reqContext.UserID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	resp.Data = transactionRes
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *TransactionHandler) HandleTransfer(ctx *gin.Context) {
+	resp := dto.Response{}
+	transfer := dto.TransferReq{}
+	err := ctx.ShouldBindJSON(&transfer)
+	if err != nil {
+		ctx.Error(apperror.ErrInvalidBody)
+		return
+	}
+	reqContext := dto.CreateContext(ctx)
+	transactionRes, err := h.tu.Transfer(ctx, transfer, reqContext.UserID)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+	resp.Data = transactionRes
+	ctx.JSON(http.StatusOK, resp)
 }

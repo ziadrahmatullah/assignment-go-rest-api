@@ -10,8 +10,8 @@ import (
 
 type TransactionUsecase interface {
 	GetTransactions(context.Context, dto.ListTransactionsReq) ([]model.Transaction, error)
-	TopUp(context.Context, model.Transaction) (*model.Transaction, error)
-	Transfer(context.Context, model.Transaction) (*model.Transaction, error)
+	TopUp(context.Context, dto.TopUpReq, uint) (*model.Transaction, error)
+	Transfer(context.Context, dto.TransferReq, uint) (*model.Transaction, error)
 }
 
 type transactionUsecase struct {
@@ -31,7 +31,7 @@ func (tu *transactionUsecase) GetTransactions(ctx context.Context, req dto.ListT
 }
 
 func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, id uint) (transaction *model.Transaction, err error) {
-	wallet , err := tu.wr.FindWalletById(ctx, id) 
+	wallet, err := tu.wr.FindWalletById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +39,11 @@ func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, id ui
 	return tu.tr.TopUpTransaction(ctx, newTransaction)
 }
 
-func (tu *transactionUsecase) Transfer(ctx context.Context, req model.Transaction) (transaction *model.Transaction, err error) {
-	_, err = tu.wr.FindWallet(ctx, req.WalletId, req.Sender)
+func (tu *transactionUsecase) Transfer(ctx context.Context, req dto.TransferReq, id uint) (transaction *model.Transaction, err error) {
+	wallet, err := tu.wr.FindWalletById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return tu.tr.TransferTransaction(ctx, req)
+	newTransaction := req.ToTransactionModel(wallet)
+	return tu.tr.TransferTransaction(ctx, newTransaction)
 }
