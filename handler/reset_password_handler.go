@@ -9,17 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ResetPassTokenHandler struct {
-	ru usecase.ResetPassTokenUsecase
+type ResetPasswordHandler struct {
+	ru usecase.ResetPasswordUsecase
 }
 
-func NewResetPassTokenHandler(ru usecase.ResetPassTokenUsecase) *ResetPassTokenHandler {
-	return &ResetPassTokenHandler{
+func NewResetPassTokenHandler(ru usecase.ResetPasswordUsecase) *ResetPasswordHandler {
+	return &ResetPasswordHandler{
 		ru: ru,
 	}
 }
 
-func (h *ResetPassTokenHandler) HandleRequestPassReset(ctx *gin.Context) {
+func (h *ResetPasswordHandler) HandleRequestPassReset(ctx *gin.Context) {
 	resp := dto.Response{}
 	req := dto.RequestResetPassReq{}
 	err := ctx.ShouldBindJSON(&req)
@@ -36,7 +36,7 @@ func (h *ResetPassTokenHandler) HandleRequestPassReset(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func (h *ResetPassTokenHandler) HandleApplyPassReset(ctx *gin.Context) {
+func (h *ResetPasswordHandler) HandleApplyPassReset(ctx *gin.Context) {
 	resp := dto.Response{}
 	req := dto.ApplyResetPassReq{}
 	err := ctx.ShouldBindJSON(&req)

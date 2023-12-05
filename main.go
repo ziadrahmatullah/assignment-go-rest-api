@@ -40,10 +40,15 @@ func main() {
 	gu := usecase.NewGameUsecase(gr, wr)
 	gh := handler.NewGameHandler(gu)
 
+	rr := repository.NewResetPassTokenRepository(db)
+	ru := usecase.NewResetPassTokenUsecase(rr, ur)
+	rh := handler.NewResetPassTokenHandler(ru)
+
 	opts := server.RouterOpts{
 		UserHandler:        uh,
 		TransactionHandler: th,
 		GameHandler:        gh,
+		ResetPassToken:     rh,
 	}
 	r := server.NewRouter(opts)
 

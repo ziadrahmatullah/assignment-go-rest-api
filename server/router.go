@@ -11,7 +11,7 @@ type RouterOpts struct {
 	UserHandler        *handler.UserHandler
 	TransactionHandler *handler.TransactionHandler
 	GameHandler        *handler.GameHandler
-	ResetPassToken *handler.ResetPassTokenHandler
+	ResetPassToken     *handler.ResetPasswordHandler
 }
 
 func NewRouter(opts RouterOpts) *gin.Engine {

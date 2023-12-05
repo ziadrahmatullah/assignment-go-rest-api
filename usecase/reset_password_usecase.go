@@ -9,24 +9,24 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/util"
 )
 
-type ResetPassTokenUsecase interface {
+type ResetPasswordUsecase interface {
 	RequestPassReset(context.Context, dto.RequestResetPassReq) (*dto.RequestResetPassRes, error)
 	ApplyPassReset(context.Context, dto.ApplyResetPassReq) error
 }
 
-type resetPassTokenUsecase struct {
+type resetPasswordUsecase struct {
 	rr repository.ResetPassTokenRepository
 	ur repository.UserRepository
 }
 
-func NewResetPassTokenUsecase(rr repository.ResetPassTokenRepository, ur repository.UserRepository) ResetPassTokenUsecase {
-	return &resetPassTokenUsecase{
+func NewResetPassTokenUsecase(rr repository.ResetPassTokenRepository, ur repository.UserRepository) ResetPasswordUsecase {
+	return &resetPasswordUsecase{
 		rr: rr,
 		ur: ur,
 	}
 }
 
-func (ru *resetPassTokenUsecase) RequestPassReset(ctx context.Context, req dto.RequestResetPassReq) (res *dto.RequestResetPassRes, err error) {
+func (ru *resetPasswordUsecase) RequestPassReset(ctx context.Context, req dto.RequestResetPassReq) (res *dto.RequestResetPassRes, err error) {
 	user, err := ru.ur.FindByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, apperror.ErrEmailNotFound
@@ -41,6 +41,6 @@ func (ru *resetPassTokenUsecase) RequestPassReset(ctx context.Context, req dto.R
 	return res, nil
 }
 
-func (ru *resetPassTokenUsecase) ApplyPassReset(ctx context.Context, req dto.ApplyResetPassReq) error {
+func (ru *resetPasswordUsecase) ApplyPassReset(ctx context.Context, req dto.ApplyResetPassReq) error {
 	return ru.rr.ApplyResetPassToken(ctx, req)
 }

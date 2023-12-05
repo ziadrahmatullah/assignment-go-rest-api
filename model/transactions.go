@@ -7,6 +7,7 @@ import (
 
 type SourceOfFunds string
 type TransactionTypes string
+
 var AmountReward decimal.Decimal
 
 const (
@@ -29,4 +30,5 @@ type Transaction struct {
 	Receiver        string           `json:"receiver"`
 	Amount          decimal.Decimal  `gorm:"not null" json:"amount"`
 	Description     string           `json:"description,omitempty"`
+	Wallet          Wallet           `gorm:"foreignKey:wallet_id;references:id"`
 }
