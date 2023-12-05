@@ -30,8 +30,8 @@ func (tu *transactionUsecase) GetTransactions(ctx context.Context, req dto.ListT
 	return tu.tr.FindListTransaction(ctx, req)
 }
 
-func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, id uint) (transaction *model.Transaction, err error) {
-	wallet, err := tu.wr.FindWalletById(ctx, id)
+func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, userId uint) (transaction *model.Transaction, err error) {
+	wallet, err := tu.wr.FindWalletByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +39,8 @@ func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, id ui
 	return tu.tr.TopUpTransaction(ctx, newTransaction)
 }
 
-func (tu *transactionUsecase) Transfer(ctx context.Context, req dto.TransferReq, id uint) (transaction *model.Transaction, err error) {
-	wallet, err := tu.wr.FindWalletById(ctx, id)
+func (tu *transactionUsecase) Transfer(ctx context.Context, req dto.TransferReq, userId uint) (transaction *model.Transaction, err error) {
+	wallet, err := tu.wr.FindWalletByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}

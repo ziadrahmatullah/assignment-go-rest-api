@@ -34,6 +34,8 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 
 	router.GET("/user-details", opts.UserHandler.HandleGetUserDetails)
 
+	// games := router.Group("/games")
+
 
 	return router
 }

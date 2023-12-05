@@ -32,12 +32,22 @@ CREATE TABLE IF NOT EXISTS wallets(
     wallet_number VARCHAR NOT NULL DEFAULT (concat('700',lpad(nextval('wallet_number_seq')::VARCHAR,10,'0'))),
     balance DECIMAL NOT NULL DEFAULT 0 CHECK (balance >= 0),
     user_id BIGINT NOT NULL,
-    chance INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS attempts(
+    id BIGSERIAL,
+    remaining_attempt INT NOT NULL DEFAULT 0,
+    wallet_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMP,
+    PRIMARY KEY(id),
+    FOREIGN KEY(wallet_id) REFERENCES wallets(id)
 );
 
 CREATE TYPE source_of_funds AS ENUM ('Bank Transfer', 'Credit Card', 'Cash', 'Reward');
@@ -89,13 +99,22 @@ VALUES
     ('Denis', 'denis@gmail.com', '2000-03-10', 'denis123', NOW(), NOW()),
     ('Ekil', 'ekil@gmail.com', '2001-01-19', 'ekil123', NOW(), NOW());
 
-INSERT INTO wallets (wallet_number, balance, user_id, chance, created_at, updated_at)
+
+INSERT INTO wallets (wallet_number, balance, user_id, created_at, updated_at)
 VALUES 
-    ('7000000000001',10000, 1, 0,'2021-11-01', '2021-11-01'),
-    ('7000000000002',20000, 2, 0, '2021-11-01', '2021-11-01'),
-    ('7000000000003',30000, 3, 0, '2021-11-01', '2021-11-01'),
-    ('7000000000004',40000, 4, 0, '2021-11-01', '2021-11-01'),
-    ('7000000000005',50000, 5, 0, '2021-11-01', '2021-11-01');
+    ('7000000000001',10000, 1, '2021-11-01', '2021-11-01'),
+    ('7000000000002',20000, 2, '2021-11-01', '2021-11-01'),
+    ('7000000000003',30000, 3, '2021-11-01', '2021-11-01'),
+    ('7000000000004',40000, 4, '2021-11-01', '2021-11-01'),
+    ('7000000000005',50000, 5, '2021-11-01', '2021-11-01');
+
+INSERT INTO attempts (remaining_attempt, wallet_id, created_at, updated_at)
+VALUES
+    (0, 1,'2021-11-01', '2021-11-01'),
+    (0, 2,'2021-11-01', '2021-11-01'),
+    (0, 3,'2021-11-01', '2021-11-01'),
+    (0, 4,'2021-11-01', '2021-11-01'),
+    (0, 5,'2021-11-01', '2021-11-01');
 
 INSERT INTO transactions (wallet_id,transaction_type,source_of_fund, receiver, amount, description, created_at, updated_at)
 VALUES 

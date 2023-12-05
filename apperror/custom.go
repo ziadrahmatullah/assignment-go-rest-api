@@ -43,14 +43,21 @@ var (
 
 	ErrFindWalletByIdQuery = NewCustomError(http.StatusInternalServerError, "find wallet by id query error")
 
-	ErrWalletNotFound = NewCustomError(http.StatusBadRequest, "wallet not found")
-
 	ErrInvalidPagination         = NewCustomError(http.StatusBadRequest, "invalid pagination")
 	ErrFindListTransactionQuery  = NewCustomError(http.StatusInternalServerError, "find list transaction query error")
 	ErrSortByTransactionQuery    = NewCustomError(http.StatusBadRequest, "wrong key for sorting")
 	ErrSortTypeTrasacntionQueqry = NewCustomError(http.StatusBadRequest, "wrong sort type for sorting")
 	ErrWrongStartDateFormat      = NewCustomError(http.StatusBadRequest, "wrong start date format")
 	ErrWrongEndDateFormat        = NewCustomError(http.StatusBadRequest, "wrong end date format")
+
+	ErrInvalidSourceOfFund = NewCustomError(http.StatusBadRequest, "invalid source of fund")
+	ErrWalletNotFound      = NewCustomError(http.StatusBadRequest, "wallet not found")
+
+	ErrFindBoxsQuery    = NewCustomError(http.StatusInternalServerError, "find boxs query error")
+	ErrFindAttemptQuery = NewCustomError(http.StatusInternalServerError, "find attempt query error")
+	ErrFindBoxByIdQuery = NewCustomError(http.StatusInternalServerError, "find box by id query error")
+
+	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")
 
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")

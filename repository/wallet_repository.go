@@ -9,7 +9,7 @@ import (
 )
 
 type WalletRepository interface {
-	FindWalletById(context.Context, uint) (*model.Wallet, error)
+	FindWalletByUserId(context.Context, uint) (*model.Wallet, error)
 	FindWalletByWalletNumber(context.Context, string) (*model.Wallet, error)
 	FindWallet(context.Context, uint, string) (*model.Wallet, error)
 }
@@ -24,8 +24,8 @@ func NewWalletRepository(db *gorm.DB) WalletRepository {
 	}
 }
 
-func (wr *walletRepository) FindWalletById(ctx context.Context, id uint) (wallet *model.Wallet, err error) {
-	result := wr.db.WithContext(ctx).Table("wallets").Where("id = ?", id).Find(&wallet)
+func (wr *walletRepository) FindWalletByUserId(ctx context.Context, id uint) (wallet *model.Wallet, err error) {
+	result := wr.db.WithContext(ctx).Table("wallets").Where("user_id = ?", id).Find(&wallet)
 	if result.Error != nil {
 		return nil, apperror.ErrFindWalletByIdQuery
 	}

@@ -7,6 +7,7 @@ import (
 
 type SourceOfFunds string
 type TransactionTypes string
+var AmountReward decimal.Decimal
 
 const (
 	BankTransfer SourceOfFunds = "Bank Transfer"

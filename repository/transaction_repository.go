@@ -95,6 +95,9 @@ func (tr *transactionRepository) SortByTransaction(sortByWord string, sort strin
 		return "", apperror.ErrSortByTransactionQuery
 	}
 	valSortType, ok2 := sortType[sort]
+	if sort == "" && valSortBy != "" {
+		valSortType = sortType["desc"]
+	}
 	if !ok2 {
 		return "", apperror.ErrSortTypeTrasacntionQueqry
 	}
@@ -128,8 +131,14 @@ func (tr *transactionRepository) TopUpTransaction(ctx context.Context, req model
 	tx.Table("wallets").
 		Where("id = ?", req.WalletId).
 		Clauses(clause.Locking{Strength: "UPDATE"}).
-		Update("amount", gorm.Expr("quota + ?", req.Amount))
+		Update("balance", gorm.Expr("balance + ?", req.Amount))
 	tx.Table("transactions").Create(&req)
+	if req.Amount == model.AmountReward {
+		tx.Table("attempts").
+			Where("wallet_id = ?", req.WalletId).
+			Clauses(clause.Locking{Strength: "UPDATE"}).
+			Update("remaining_attempt", gorm.Expr("remaining_attempt + ?", 1))
+	}
 	err = tx.Commit().Error
 	if err != nil {
 		return nil, apperror.ErrTxCommit
@@ -147,12 +156,12 @@ func (tr *transactionRepository) TransferTransaction(ctx context.Context, req mo
 	tx.Table("wallets").
 		Where("wallet_number = ?", req.Sender).
 		Clauses(clause.Locking{Strength: "UPDATE"}).
-		Update("amount", gorm.Expr("quota - ?", req.Amount))
+		Update("balance", gorm.Expr("balance - ?", req.Amount))
 	var receiver model.Wallet
 	tx.Table("wallets").
 		Where("wallet_number = ?", req.Receiver).
 		Clauses(clause.Locking{Strength: "UPDATE"}).
-		Update("amount", gorm.Expr("quota + ?", req.Amount)).Scan(&receiver)
+		Update("balance", gorm.Expr("balance + ?", req.Amount)).Scan(&receiver)
 	tx.Table("transactions").Create(&req)
 	receiverHistory := &model.Transaction{
 		WalletId:        receiver.ID,

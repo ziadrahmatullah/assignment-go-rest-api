@@ -5,6 +5,7 @@ import (
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/model"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/usecase"
 	"github.com/gin-gonic/gin"
 )
@@ -44,6 +45,10 @@ func (h *TransactionHandler) HandleTopUp(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&topUp)
 	if err != nil {
 		ctx.Error(apperror.ErrInvalidBody)
+		return
+	}
+	if topUp.SourceOfFund == string(model.Reward){
+		ctx.Error(apperror.ErrInvalidSourceOfFund)
 		return
 	}
 	reqContext := dto.CreateContext(ctx)
