@@ -10,6 +10,7 @@ import (
 type RouterOpts struct {
 	UserHandler        *handler.UserHandler
 	TransactionHandler *handler.TransactionHandler
+	GameHandler        *handler.GameHandler
 }
 
 func NewRouter(opts RouterOpts) *gin.Engine {
@@ -34,8 +35,10 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 
 	router.GET("/user-details", opts.UserHandler.HandleGetUserDetails)
 
-	// games := router.Group("/games")
-
+	games := router.Group("/games")
+	games.GET("/boxes", opts.GameHandler.HandleGetAllBoxes)
+	games.GET("/attempts", opts.GameHandler.HandleGetRemainingAttempt)
+	games.POST("", opts.GameHandler.HandleChooseBox)
 
 	return router
 }

@@ -36,9 +36,14 @@ func main() {
 	tu := usecase.NewTransactionUsecase(tr, wr)
 	th := handler.NewTransactionHandler(tu)
 
+	gr := repository.NewGameRepository(db)
+	gu := usecase.NewGameUsecase(gr, wr)
+	gh := handler.NewGameHandler(gu)
+
 	opts := server.RouterOpts{
 		UserHandler:        uh,
 		TransactionHandler: th,
+		GameHandler:        gh,
 	}
 	r := server.NewRouter(opts)
 
