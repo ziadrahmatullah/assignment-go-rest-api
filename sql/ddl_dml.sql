@@ -48,15 +48,15 @@ CREATE TABLE IF NOT EXISTS transactions(
     wallet_id BIGINT NOT NULL,
     transaction_type transaction_types NOT NULL,
     source_of_fund source_of_funds,
-    recipient_id BIGINT,
+    sender VARCHAR,
+    receiver VARCHAR NOT NULL,
     amount DECIMAL NOT NULL,
     description VARCHAR,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (wallet_id) REFERENCES wallets(id),
-    FOREIGN KEY (recipient_id) REFERENCES wallets(id)
+    FOREIGN KEY (wallet_id) REFERENCES wallets(id)
 );
 
 CREATE TABLE IF NOT EXISTS boxs(
@@ -97,31 +97,31 @@ VALUES
     ('7000000000004',40000, 4, 0, '2021-11-01', '2021-11-01'),
     ('7000000000005',50000, 5, 0, '2021-11-01', '2021-11-01');
 
-INSERT INTO transactions (wallet_id,transaction_type,source_of_fund, amount, description, created_at, updated_at)
+INSERT INTO transactions (wallet_id,transaction_type,source_of_fund, receiver, amount, description, created_at, updated_at)
 VALUES 
-    (2,'Top up','Bank Transfer', 100000, 'ML',  '2022-11-01', '2022-11-01'),
-    (1,'Top up', 'Credit Card',200000, 'PUBG', '2022-10-15', '2022-10-15'),
-    (2,'Top up', 'Bank Transfer',700000, 'ML',  '2022-09-20', '2022-09-20'),
-    (3,'Top up','Credit Card', 400000, 'ML',  '2022-08-05', '2022-08-05'),
-    (3,'Top up', 'Credit Card',1000000, 'Genshin',  '2022-06-01', '2022-06-01'),
-    (1,'Top up','Bank Transfer', 600000, 'Genshin',  '2022-06-15', '2022-06-15'),
-    (4,'Top up','Cash', 200000, 'ML',  '2022-05-10', '2022-05-10'),
-    (4,'Top up','Bank Transfer', 300000, 'PUBG', '2023-04-20', '2023-04-20'),
-    (2,'Top up','Cash', 400000, 'Genshin',  '2023-03-05', '2023-03-05'),
-    (5,'Top up','Bank Transfer', 600000, 'Genshin', '2023-02-01', '2023-02-01');
+    (2,'Top up','Bank Transfer', 100000,'7000000000002', 'ML',  '2022-11-01', '2022-11-01'),
+    (1,'Top up', 'Credit Card',200000,'7000000000001', 'PUBG', '2022-10-15', '2022-10-15'),
+    (2,'Top up', 'Bank Transfer',700000,'7000000000002', 'ML',  '2022-09-20', '2022-09-20'),
+    (3,'Top up','Credit Card', 400000,'7000000000003', 'ML',  '2022-08-05', '2022-08-05'),
+    (3,'Top up', 'Credit Card',1000000, '7000000000003','Genshin',  '2022-06-01', '2022-06-01'),
+    (1,'Top up','Bank Transfer', 600000,'7000000000001', 'Genshin',  '2022-06-15', '2022-06-15'),
+    (4,'Top up','Cash', 200000, 'ML','7000000000004',  '2022-05-10', '2022-05-10'),
+    (4,'Top up','Bank Transfer', 300000, '7000000000004','PUBG', '2023-04-20', '2023-04-20'),
+    (2,'Top up','Cash', 400000, 'Genshin', '7000000000002', '2023-03-05', '2023-03-05'),
+    (5,'Top up','Bank Transfer', 600000,'7000000000005', 'Genshin', '2023-02-01', '2023-02-01');
 
-INSERT INTO transactions (wallet_id,transaction_type, amount, description,recipient_id, created_at, updated_at)
+INSERT INTO transactions (wallet_id,transaction_type, sender, receiver, amount, description,recipient_id, created_at, updated_at)
 VALUES 
-    (1, 'Transfer', 100000, 'Ngasih', 2, '2022-11-03', '2022-11-03'),
-    (2,'Transfer', 100000, 'Ngasih', 3, '2022-10-25', '2022-10-25'),
-    (2,'Transfer', 100000, 'Ngasih', 1, '2022-09-10', '2022-09-10'),
-    (3, 'Transfer',100000, 'Ngasih', 5, '2022-08-15', '2022-08-15'),
-    (1, 'Transfer',100000, 'Ngasih', 3, '2022-07-05', '2022-07-05'),
-    (5, 'Transfer',100000, 'Ngasih', 1, '2022-06-20', '2022-06-20'),
-    (5, 'Transfer',100000, 'Ngasih', 4, '2022-05-10', '2022-05-10'),
-    (5, 'Transfer',100000, 'Ngasih', 3, '2023-04-15', '2023-04-15'),
-    (4, 'Transfer',100000, 'Ngasih', 2, '2023-03-20', '2023-03-20'),
-    (3,'Transfer', 100000, 'Ngasih', 2, '2023-02-05', '2023-02-05');
+    (1, 'Transfer', 100000, 'Ngasih', '7000000000001','7000000000002', '2022-11-03', '2022-11-03'),
+    (2,'Transfer', 100000, 'Ngasih', '7000000000002','7000000000003', '2022-10-25', '2022-10-25'),
+    (2,'Transfer', 100000, 'Ngasih', '7000000000002','7000000000001', '2022-09-10', '2022-09-10'),
+    (3, 'Transfer',100000, 'Ngasih', '7000000000003','7000000000005', '2022-08-15', '2022-08-15'),
+    (1, 'Transfer',100000, 'Ngasih', '7000000000001','7000000000003', '2022-07-05', '2022-07-05'),
+    (5, 'Transfer',100000, 'Ngasih', '7000000000005','7000000000001', '2022-06-20', '2022-06-20'),
+    (5, 'Transfer',100000, 'Ngasih', '7000000000005','7000000000004', '2022-05-10', '2022-05-10'),
+    (5, 'Transfer',100000, 'Ngasih', '7000000000005','7000000000003','2023-04-15', '2023-04-15'),
+    (4, 'Transfer',100000, 'Ngasih', '7000000000004','7000000000002', '2023-03-20', '2023-03-20'),
+    (3,'Transfer', 100000, 'Ngasih', '7000000000003','7000000000002', '2023-02-05', '2023-02-05');
 
 INSERT INTO boxs (reward_amount, created_at, updated_at)
 VALUES

@@ -40,11 +40,15 @@ var (
 	ErrEmailALreadyUsed       = NewCustomError(http.StatusBadRequest, "email already used")
 	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
 
+	ErrFindWalletByIdQuery = NewCustomError(http.StatusInternalServerError, "find wallet by id query error")
+
+	ErrWalletNotFound = NewCustomError(http.StatusBadRequest, "wallet not found")
+
 	ErrFindListTransactionQuery  = NewCustomError(http.StatusInternalServerError, "find list transaction query error")
 	ErrSortByTransactionQuery    = NewCustomError(http.StatusBadRequest, "wrong key for sorting")
 	ErrSortTypeTrasacntionQueqry = NewCustomError(http.StatusBadRequest, "wrong sort type for sorting")
-	ErrWrongStartDateFormat           = NewCustomError(http.StatusBadRequest, "wrong start date format")
-	ErrWrongEndDateFormat           = NewCustomError(http.StatusBadRequest, "wrong end date format")
+	ErrWrongStartDateFormat      = NewCustomError(http.StatusBadRequest, "wrong start date format")
+	ErrWrongEndDateFormat        = NewCustomError(http.StatusBadRequest, "wrong end date format")
 
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
