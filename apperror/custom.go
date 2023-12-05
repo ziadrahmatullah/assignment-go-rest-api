@@ -40,21 +40,11 @@ var (
 	ErrEmailALreadyUsed       = NewCustomError(http.StatusBadRequest, "email already used")
 	ErrInvalidPasswordOrEmail = NewCustomError(http.StatusBadRequest, "invalid password or email")
 
-	ErrFindJobsQuery            = NewCustomError(http.StatusInternalServerError, "find jobs query error")
-	ErrFindJobByIdQuery         = NewCustomError(http.StatusInternalServerError, "find job by id query error")
-	ErrNewJobQuery              = NewCustomError(http.StatusInternalServerError, "new job query error")
-	ErrUpdateJobExpireDateQuery = NewCustomError(http.StatusInternalServerError, "set job expire date query error")
-	ErrRemoveJobQuery           = NewCustomError(http.StatusInternalServerError, "remove job query error")
-
-	ErrInvalidExpireDate    = NewCustomError(http.StatusBadRequest, "invalid expire date")
-	ErrJobNotFound          = NewCustomError(http.StatusBadRequest, "job not found")
-	ErrJobQuotaHasFulfilled = NewCustomError(http.StatusBadRequest, "job quota has fulfilled")
-	ErrAlreadyApplied       = NewCustomError(http.StatusBadRequest, "already apply this job")
-
-	ErrFindRecordsQuery = NewCustomError(http.StatusInternalServerError, "find records query error")
-	ErrFindRecordQuery  = NewCustomError(http.StatusInternalServerError, "find record query error")
-
-	ErrRecordNotFound = NewCustomError(http.StatusBadRequest, "record not found")
+	ErrFindListTransactionQuery  = NewCustomError(http.StatusInternalServerError, "find list transaction query error")
+	ErrSortByTransactionQuery    = NewCustomError(http.StatusBadRequest, "wrong key for sorting")
+	ErrSortTypeTrasacntionQueqry = NewCustomError(http.StatusBadRequest, "wrong sort type for sorting")
+	ErrWrongStartDateFormat           = NewCustomError(http.StatusBadRequest, "wrong start date format")
+	ErrWrongEndDateFormat           = NewCustomError(http.StatusBadRequest, "wrong end date format")
 
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
