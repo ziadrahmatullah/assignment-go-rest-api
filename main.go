@@ -47,10 +47,10 @@ func main() {
 	rh := handler.NewResetPassTokenHandler(ru)
 
 	opts := server.RouterOpts{
-		UserHandler:        uh,
-		TransactionHandler: th,
-		GameHandler:        gh,
-		ResetPassToken:     rh,
+		UserHandler:          uh,
+		TransactionHandler:   th,
+		GameHandler:          gh,
+		ResetPasswordHandler: rh,
 	}
 	r := server.NewRouter(opts)
 
