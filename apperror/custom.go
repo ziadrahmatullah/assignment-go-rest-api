@@ -73,6 +73,9 @@ var (
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
 
+	ErrPageNotFound             = NewCustomError(http.StatusBadRequest, "page not found")
+	ErrInvalidSortFormat        = NewCustomError(http.StatusBadRequest, "invalid sorting format")
+	ErrInvalidFilterFormat      = NewCustomError(http.StatusBadRequest, "invalid filter format")
 	ErrCantTransferToYourWallet = NewCustomError(http.StatusBadRequest, "can't transfer to your wallet")
 	ErrTxCommit                 = NewCustomError(http.StatusInternalServerError, "commit transaction error")
 	ErrInsufficientBalance      = NewCustomError(http.StatusBadRequest, "insufficient balance")

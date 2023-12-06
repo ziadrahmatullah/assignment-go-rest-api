@@ -64,11 +64,14 @@ func (tr *transactionRepository) FindListTransaction(ctx context.Context, req dt
 	if err != nil {
 		return nil, apperror.ErrFindListTransactionQuery
 	}
+	totalPage := math.Ceil(float64(totalData) / float64(limit))
+	if page > int(totalPage) {
+		return nil, apperror.ErrPageNotFound
+	}
 	err = tr.db.WithContext(ctx).Table("transactions").Raw(raw).Scan(&transactions).Error
 	if err != nil {
 		return nil, apperror.ErrFindListTransactionQuery
 	}
-	totalPage := math.Ceil(float64(totalData) / float64(limit))
 	res := &dto.TransactionPaginationRes{
 		Data:      transactions,
 		TotalData: totalData,
@@ -88,8 +91,14 @@ func (tr *transactionRepository) SearchTransaction(word *string) (sql string) {
 }
 
 func (tr *transactionRepository) FilterTransaction(start, end *string, prevSql string) (sql string, err error) {
-	if start == nil || end == nil || *start == "" || *end == "" {
+	if (start == nil || *start == "") && (end == nil || *end == "") {
 		return "", nil
+	}
+	if (start != nil || *start != "") && (end == nil || *end == "") {
+		return "", apperror.ErrInvalidFilterFormat
+	}
+	if (start == nil || *start == "") && (end != nil || *end != "") {
+		return "", apperror.ErrInvalidFilterFormat
 	}
 	_, err = time.Parse("2006-01-02", *start)
 	if err != nil {
@@ -108,8 +117,11 @@ func (tr *transactionRepository) FilterTransaction(start, end *string, prevSql s
 }
 
 func (tr *transactionRepository) SortByTransaction(sortByWord, sort *string) (sql string, err error) {
-	if sortByWord == nil || *sortByWord == "" {
+	if (sortByWord == nil || *sortByWord == "") && (*sort == "" || sort == nil){
 		return "", nil
+	}
+	if (sortByWord == nil || *sortByWord == "") && (*sort != "" || sort != nil){
+		return "", apperror.ErrInvalidSortFormat
 	}
 	valSortBy, ok := sortBy[*sortByWord]
 	if !ok {
