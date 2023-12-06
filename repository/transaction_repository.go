@@ -100,9 +100,9 @@ func (tr *transactionRepository) FilterTransaction(start, end *string, prevSql s
 		return "", apperror.ErrWrongEndDateFormat
 	}
 	if prevSql == "" {
-		sql = fmt.Sprintf("WHERE created_at BETWEEN %s AND %s ", *start, *end)
+		sql = fmt.Sprintf("WHERE created_at BETWEEN '%s' AND '%s' ", *start, *end)
 	} else {
-		sql = fmt.Sprintf("AND created_at BETWEEN %s AND %s ", *start, *end)
+		sql = fmt.Sprintf("AND created_at BETWEEN '%s' AND '%s' ", *start, *end)
 	}
 	return sql, nil
 }
@@ -159,7 +159,7 @@ func (tr *transactionRepository) TopUpTransaction(ctx context.Context, req model
 		Clauses(clause.Locking{Strength: "UPDATE"}).
 		Update("balance", gorm.Expr("balance + ?", req.Amount))
 	tx.Table("transactions").Create(&req)
-	if req.Amount.Cmp(model.AmountReward) == 1 {
+	if req.Amount.GreaterThan(model.AmountReward) {
 		tx.Table("attempts").
 			Where("wallet_id = ?", req.WalletId).
 			Clauses(clause.Locking{Strength: "UPDATE"}).

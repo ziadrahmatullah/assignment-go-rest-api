@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 func ToDate(dateString string) time.Time {
@@ -32,23 +33,22 @@ func GetStringQueryParam(ctx *gin.Context, key string) *string {
 	return &value
 }
 
-// func ShuffleBoxes(boxes []model.Box) {
-// 	rand.Seed(time.Now().UnixNano())
-// 	n := len(boxes)
-// 	for i := n - 1; i > 0; i-- {
-// 		j := rand.Intn(i + 1)
-// 		boxes[i], boxes[j] = boxes[j], boxes[i]
-// 	}
-// }
+func IsTopUpAmountValid(amount decimal.Decimal) bool {
+	minAmount := decimal.NewFromInt(50000)
+	maxAmount := decimal.NewFromInt(10000000)
 
-// func ShuffleArray(arr []int) {
-// 	n := len(arr)
-// 	for i := n - 1; i > 0; i-- {
-// 		randomIndex, err := rand.Int(rand.Reader, big.NewInt(int64(i+1)))
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		idx := int(randomIndex.Int64())
-// 		arr[i], arr[idx] = arr[idx], arr[i]
-// 	}
-// }
+	if amount.LessThan(minAmount) || amount.GreaterThan(maxAmount) {
+		return false
+	}
+	return true
+}
+
+func IsTransferAmountValid(amount decimal.Decimal) bool {
+	minAmount := decimal.NewFromInt(1000)
+	maxAmount := decimal.NewFromInt(50000000)
+
+	if amount.LessThan(minAmount) || amount.GreaterThan(maxAmount) {
+		return false
+	}
+	return true
+}

@@ -8,7 +8,7 @@ import (
 type SourceOfFunds string
 type TransactionTypes string
 
-var AmountReward decimal.Decimal
+var AmountReward decimal.Decimal = decimal.NewFromInt(9999999)
 
 const (
 	BankTransfer SourceOfFunds = "Bank Transfer"
@@ -31,4 +31,13 @@ type Transaction struct {
 	Amount          decimal.Decimal  `gorm:"not null" json:"amount"`
 	Description     string           `json:"description,omitempty"`
 	Wallet          Wallet           `gorm:"foreignKey:wallet_id;references:id"`
+}
+
+func IsSourceOfFundValid(source string) bool {
+	for _, validSource := range []SourceOfFunds{BankTransfer, CreditCard, Cash} {
+		if SourceOfFunds(source) == validSource {
+			return true
+		}
+	}
+	return false
 }

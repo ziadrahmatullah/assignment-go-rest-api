@@ -63,7 +63,9 @@ var (
 
 	ErrNoAttemptLeft = NewCustomError(http.StatusBadRequest, "you have no attempt left")
 
-	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")
+	ErrBoxNotFound     = NewCustomError(http.StatusBadRequest, "box not found")
+	ErrInvalidToken    = NewCustomError(http.StatusBadRequest, "invalid token")
+	ErrApplyTokenQUery = NewCustomError(http.StatusInternalServerError, "")
 
 	ErrCreateResetPassTokenQuery = NewCustomError(http.StatusInternalServerError, "create reset pass token query error")
 	ErrTokenExpired              = NewCustomError(http.StatusBadRequest, "token expired")
@@ -71,8 +73,11 @@ var (
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
 
-	ErrTxCommit = NewCustomError(http.StatusInternalServerError, "commit transaction error")
-
-	ErrInvalidBody = NewCustomError(http.StatusBadRequest, "invalid body")
-	ErrUnauthorize = NewCustomError(http.StatusUnauthorized, "unauthorized")
+	ErrCantTransferToYourWallet = NewCustomError(http.StatusBadRequest, "can't transfer to your wallet")
+	ErrTxCommit                 = NewCustomError(http.StatusInternalServerError, "commit transaction error")
+	ErrInsufficientBalance      = NewCustomError(http.StatusBadRequest, "insufficient balance")
+	ErrInvalidWalletNumber      = NewCustomError(http.StatusBadRequest, "invalid wallet number")
+	ErrInvalidAmount            = NewCustomError(http.StatusBadRequest, "invalid amount")
+	ErrInvalidBody              = NewCustomError(http.StatusBadRequest, "invalid body")
+	ErrUnauthorize              = NewCustomError(http.StatusUnauthorized, "unauthorized")
 )

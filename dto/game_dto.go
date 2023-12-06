@@ -3,7 +3,7 @@ package dto
 import "github.com/shopspring/decimal"
 
 type GameBoxReq struct {
-	BoxId uint `json:"box_id"`
+	BoxId uint `binding:"required" json:"box_id"`
 }
 
 type GameBoxesRes struct {

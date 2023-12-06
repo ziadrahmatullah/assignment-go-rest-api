@@ -37,7 +37,7 @@ func (rr *resetPassTokenRepository) ApplyResetPassToken(ctx context.Context, req
 	var resetToken model.ResetPassToken
 	result := rr.db.WithContext(ctx).Where("token = ? AND is_used = false", req.Token).Preload("User").First(&resetToken)
 	if result.Error != nil {
-		return result.Error
+		return apperror.ErrInvalidToken
 	}
 	if resetToken.User.Email != req.Email {
 		return apperror.ErrInvalidEmail

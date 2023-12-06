@@ -46,7 +46,11 @@ func (h *TransactionHandler) HandleTopUp(ctx *gin.Context) {
 		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
-	if topUp.SourceOfFund == string(model.Reward) {
+	if !util.IsTopUpAmountValid(topUp.Amount) {
+		ctx.Error(apperror.ErrInvalidAmount)
+		return
+	}
+	if !model.IsSourceOfFundValid(topUp.SourceOfFund) {
 		ctx.Error(apperror.ErrInvalidSourceOfFund)
 		return
 	}
@@ -66,6 +70,10 @@ func (h *TransactionHandler) HandleTransfer(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&transfer)
 	if err != nil {
 		ctx.Error(apperror.ErrInvalidBody)
+		return
+	}
+	if !util.IsTransferAmountValid(transfer.Amount) {
+		ctx.Error(apperror.ErrInvalidAmount)
 		return
 	}
 	reqContext := dto.CreateContext(ctx)

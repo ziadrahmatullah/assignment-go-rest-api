@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/model"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/repository"
@@ -40,10 +41,20 @@ func (tu *transactionUsecase) TopUp(ctx context.Context, req dto.TopUpReq, userI
 }
 
 func (tu *transactionUsecase) Transfer(ctx context.Context, req dto.TransferReq, userId uint) (transaction *model.Transaction, err error) {
-	wallet, err := tu.wr.FindWalletByUserId(ctx, userId)
+	senderWallet, err := tu.wr.FindWalletByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
-	newTransaction := req.ToTransactionModel(wallet)
+	receiverWallet, err := tu.wr.FindWalletByWalletNumber(ctx, req.WalletNumber)
+	if err != nil {
+		return nil, apperror.ErrInvalidWalletNumber
+	}
+	if senderWallet.WalletNumber == receiverWallet.WalletNumber {
+		return nil, apperror.ErrCantTransferToYourWallet
+	}
+	if senderWallet.Balance.LessThan(req.Amount) {
+		return nil, apperror.ErrInsufficientBalance
+	}
+	newTransaction := req.ToTransactionModel(senderWallet)
 	return tu.tr.TransferTransaction(ctx, newTransaction)
 }

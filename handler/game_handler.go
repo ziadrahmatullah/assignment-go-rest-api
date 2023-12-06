@@ -44,7 +44,7 @@ func (gh *GameHandler) HandleGetRemainingAttempt(ctx *gin.Context) {
 
 func (gh *GameHandler) HandleChooseBox(ctx *gin.Context) {
 	resp := dto.Response{}
-	gameReq := dto.GameBoxReq{}
+	var gameReq dto.GameBoxReq
 	err := ctx.ShouldBindJSON(&gameReq)
 	if err != nil {
 		ctx.Error(apperror.ErrInvalidBody)
