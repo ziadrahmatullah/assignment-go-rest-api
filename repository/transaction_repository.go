@@ -133,7 +133,7 @@ func (tr *transactionRepository) TopUpTransaction(ctx context.Context, req model
 		Clauses(clause.Locking{Strength: "UPDATE"}).
 		Update("balance", gorm.Expr("balance + ?", req.Amount))
 	tx.Table("transactions").Create(&req)
-	if req.Amount == model.AmountReward {
+	if req.Amount.Cmp(model.AmountReward) == 1 {
 		tx.Table("attempts").
 			Where("wallet_id = ?", req.WalletId).
 			Clauses(clause.Locking{Strength: "UPDATE"}).

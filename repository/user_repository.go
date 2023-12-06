@@ -31,7 +31,8 @@ func (u *userRepository) FindUserDetails(ctx context.Context, id uint) (user *dt
 	err = u.db.WithContext(ctx).Table("users").
 		Select("users.name, users.birthdate, users.email, wallets.wallet_number, wallets.balance").
 		Joins("JOIN wallets ON users.id = wallets.user_id").
-		Scan(&user).Error
+		Where("users.id = ?", id).
+		Find(&user).Error
 	if err != nil {
 		return nil, apperror.ErrFindUsersQuery
 	}

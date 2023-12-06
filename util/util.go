@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func ToDate(dateString string) time.Time {
@@ -23,6 +25,11 @@ func GenerateRandomString() string {
 		panic(err)
 	}
 	return base64.StdEncoding.EncodeToString(b)
+}
+
+func GetStringQueryParam(ctx *gin.Context, key string) *string {
+	value := ctx.Query(key)
+	return &value
 }
 
 // func ShuffleBoxes(boxes []model.Box) {

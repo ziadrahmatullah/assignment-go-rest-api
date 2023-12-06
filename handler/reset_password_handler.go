@@ -21,7 +21,7 @@ func NewResetPassTokenHandler(ru usecase.ResetPasswordUsecase) *ResetPasswordHan
 
 func (h *ResetPasswordHandler) HandleRequestPassReset(ctx *gin.Context) {
 	resp := dto.Response{}
-	req := dto.RequestResetPassReq{}
+	var req dto.RequestResetPassReq
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.Error(apperror.ErrInvalidBody)

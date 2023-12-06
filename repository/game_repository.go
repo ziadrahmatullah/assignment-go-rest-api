@@ -53,7 +53,7 @@ func (gr *gameRepository) FindBoxById(ctx context.Context, id uint) (box *model.
 	return box, nil
 }
 
-func (gr *gameRepository) ChooseBox(ctx context.Context, box model.Box, wallet model.Wallet) (ChoosenBox *dto.ChooseBoxRes, err error) {
+func (gr *gameRepository) ChooseBox(ctx context.Context, box model.Box, wallet model.Wallet) (*dto.ChooseBoxRes, error) {
 	tx := gr.db.WithContext(ctx).Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -78,16 +78,19 @@ func (gr *gameRepository) ChooseBox(ctx context.Context, box model.Box, wallet m
 	gameTransaction := &model.Transaction{
 		WalletId:        wallet.ID,
 		TransactionType: model.GameReward,
-		SourceOfFund:    model.Reward,
+		SourceOfFund:    new(model.SourceOfFunds),
 		Receiver:        wallet.WalletNumber,
 		Amount:          box.RewardAmount,
 	}
+	*gameTransaction.SourceOfFund = model.Reward
 	tx.Table("transactions").Create(&gameTransaction)
-	err = tx.Commit().Error
+	err := tx.Commit().Error
 	if err != nil {
-		return nil, apperror.ErrTxCommit
+		return nil,err
 	}
-	ChoosenBox.RewardAmount = gameTransaction.Amount
-	return ChoosenBox, nil
+	var ChoosenBox = dto.ChooseBoxRes{
+		RewardAmount: gameTransaction.Amount,
+	}
+	return &ChoosenBox, nil
 
 }

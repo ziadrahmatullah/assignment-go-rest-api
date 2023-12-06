@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/repository"
 )
@@ -47,6 +48,10 @@ func (gu *gameUsecase) ChooseBox(ctx context.Context, req dto.GameBoxReq, userId
 	box, err := gu.gr.FindBoxById(ctx, req.BoxId)
 	if err != nil {
 		return nil, err
+	}
+	attempt, _ := gu.ar.FindAttempt(ctx, *wallet)
+	if attempt.RemainingAttempt == 0{
+		return nil, apperror.ErrNoAttemptLeft
 	}
 	return gu.gr.ChooseBox(ctx, *box, *wallet)
 }

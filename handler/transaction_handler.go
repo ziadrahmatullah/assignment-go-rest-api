@@ -7,6 +7,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/model"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/usecase"
+	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,13 +24,13 @@ func NewTransactionHandler(tu usecase.TransactionUsecase) *TransactionHandler {
 func (h *TransactionHandler) HandleGetTransactions(ctx *gin.Context) {
 	resp := dto.Response{}
 	var req dto.ListTransactionsReq
-	*req.Search = ctx.Query("s")
-	*req.FilterStart = ctx.Query("start")
-	*req.FilterEnd = ctx.Query("end")
-	*req.SortBy = ctx.Query("sortBy")
-	*req.SortType = ctx.Query("sort")
-	*req.PaginationLimit = ctx.Query("limit")
-	*req.PaginationPage = ctx.Query("page")
+	req.Search = util.GetStringQueryParam(ctx, "s")
+	req.FilterStart = util.GetStringQueryParam(ctx, "start")
+	req.FilterEnd = util.GetStringQueryParam(ctx, "end")
+	req.SortBy = util.GetStringQueryParam(ctx, "sortBy")
+	req.SortType = util.GetStringQueryParam(ctx, "sort")
+	req.PaginationLimit = util.GetStringQueryParam(ctx, "limit")
+	req.PaginationPage = util.GetStringQueryParam(ctx, "page")
 	transactions, err := h.tu.GetTransactions(ctx, req)
 	if err != nil {
 		ctx.Error(err)

@@ -11,7 +11,7 @@ import (
 
 func AuthorizeHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if gin.Mode() == gin.DebugMode {
+		if gin.Mode() == gin.TestMode {
 			return
 		}
 
@@ -21,6 +21,11 @@ func AuthorizeHandler() gin.HandlerFunc {
 		}
 
 		if ctx.Request.URL.Path == "/users/login" {
+			ctx.Next()
+			return
+		}
+
+		if ctx.Request.URL.Path == "/users/reset-password" {
 			ctx.Next()
 			return
 		}

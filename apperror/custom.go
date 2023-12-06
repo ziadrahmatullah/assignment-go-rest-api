@@ -61,6 +61,8 @@ var (
 	ErrNewAttemptQuery  = NewCustomError(http.StatusInternalServerError, "new attempt query error")
 	ErrFindBoxByIdQuery = NewCustomError(http.StatusInternalServerError, "find box by id query error")
 
+	ErrNoAttemptLeft = NewCustomError(http.StatusBadRequest, "you have no attempt left")
+
 	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")
 
 	ErrCreateResetPassTokenQuery = NewCustomError(http.StatusInternalServerError, "create reset pass token query error")

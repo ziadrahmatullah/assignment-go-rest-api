@@ -7,6 +7,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/repository"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/util"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type ResetPasswordUsecase interface {
@@ -37,10 +38,14 @@ func (ru *resetPasswordUsecase) RequestPassReset(ctx context.Context, req dto.Re
 	if err != nil {
 		return nil, err
 	}
-	res.Token = token
+	res = &dto.RequestResetPassRes{
+		Token: token,
+	}
 	return res, nil
 }
 
 func (ru *resetPasswordUsecase) ApplyPassReset(ctx context.Context, req dto.ApplyResetPassReq) error {
+	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(req.NewPassword), 10)
+	req.NewPassword = string(hashPassword)
 	return ru.rr.ApplyResetPassToken(ctx, req)
 }

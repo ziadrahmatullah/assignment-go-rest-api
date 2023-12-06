@@ -10,7 +10,7 @@ import (
 
 type RegisterReq struct {
 	Name      string `binding:"required" json:"name"`
-	Birthdate string `binding:"required" json:"birtdate"`
+	Birthdate string `binding:"required" json:"birthdate"`
 	Email     string `binding:"required" json:"email"`
 	Password  string `binding:"required" json:"password"`
 }

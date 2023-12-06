@@ -29,14 +29,16 @@ type TransferReq struct {
 }
 
 func (tr *TopUpReq) ToTransactionModel(wallet *model.Wallet) model.Transaction {
-	return model.Transaction{
+	tx := model.Transaction{
 		WalletId:        wallet.ID,
 		TransactionType: model.TransactionTypes(model.TopUp),
-		SourceOfFund:    model.SourceOfFunds(tr.SourceOfFund),
+		SourceOfFund:    new(model.SourceOfFunds),
 		Receiver:        wallet.WalletNumber,
 		Amount:          tr.Amount,
 		Description:     fmt.Sprintf("Top Up from %s", tr.SourceOfFund),
 	}
+	*tx.SourceOfFund = model.SourceOfFunds(tr.SourceOfFund)
+	return tx
 }
 
 func (tr *TransferReq) ToTransactionModel(wallet *model.Wallet) model.Transaction {

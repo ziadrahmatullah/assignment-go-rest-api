@@ -31,7 +31,7 @@ func (ar *attemptRepository) NewAttempt(ctx context.Context, walletId uint) (*mo
 	}
 	err := ar.db.WithContext(ctx).Table("attempts").Create(newAttempt).Error
 	if err != nil {
-		return nil, apperror.ErrNewAttemptQuery
+		return nil, err
 	}
 	return newAttempt, nil
 }
