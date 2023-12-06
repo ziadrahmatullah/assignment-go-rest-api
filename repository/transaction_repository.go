@@ -27,7 +27,7 @@ type transactionRepository struct {
 var sortBy = map[string]string{
 	"date":   "created_at",
 	"amount": "amount",
-	"to":     "recipient_id",
+	"to":     "receiver",
 }
 
 var sortType = map[string]string{
@@ -120,7 +120,7 @@ func (tr *transactionRepository) SortByTransaction(sortByWord, sort *string) (sq
 		valSortType = sortType["desc"]
 	} else {
 		valSortType, ok = sortType[*sort]
-		if ok {
+		if !ok {
 			return "", apperror.ErrSortTypeTrasacntionQueqry
 		}
 	}

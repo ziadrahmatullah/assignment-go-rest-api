@@ -114,7 +114,7 @@ VALUES
     (0, 4,'2021-11-01', '2021-11-01'),
     (0, 5,'2021-11-01', '2021-11-01');
 
-INSERT INTO transactions (wallet_id,transaction_type,source_of_fund, receiver,  amount, description, created_at, updated_at)
+INSERT INTO transactions (wallet_id,transaction_type,source_of_fund, amount, receiver, description, created_at, updated_at)
 VALUES 
     (2,'Top up','Bank Transfer', 100000,'7000000000002', 'Bank Transfer',  '2022-11-01', '2022-11-01'),
     (1,'Top up', 'Credit Card',200000,'7000000000001', 'Bank Transfer', '2022-10-15', '2022-10-15'),
@@ -127,7 +127,7 @@ VALUES
     (2,'Top up','Cash', 400000,  '7000000000002', 'Credit Card','2023-03-05', '2023-03-05'),
     (5,'Top up','Bank Transfer', 600000,'7000000000005', 'Credit Card', '2023-02-01', '2023-02-01');
 
-INSERT INTO transactions (wallet_id,transaction_type, sender, receiver, amount, description, created_at, updated_at)
+INSERT INTO transactions (wallet_id,transaction_type, amount, description, sender, receiver, created_at, updated_at)
 VALUES 
     (1, 'Transfer', 100000, 'Ngasih', '7000000000001','7000000000002', '2022-11-03', '2022-11-03'),
     (2,'Transfer', 100000, 'Ngasih', '7000000000002','7000000000003', '2022-10-25', '2022-10-25'),
