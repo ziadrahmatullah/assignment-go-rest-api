@@ -11,6 +11,7 @@ import (
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/usecase"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/util"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -62,6 +63,14 @@ var loginReq = []dto.LoginReq{
 	},
 }
 
+var userDetails = dto.UserDetails{
+	Name:         "Alice",
+	Birthdate:    util.ToDate("2001-03-03"),
+	Email:        "alice@gmail.com",
+	WalletNumber: "7000000000001",
+	Balance:      decimal.NewFromInt(int64(100000)),
+}
+
 func TestGetAllUsers(t *testing.T) {
 	t.Run("should return users when success", func(t *testing.T) {
 		ur := mocks.NewUserRepository(t)
@@ -75,6 +84,22 @@ func TestGetAllUsers(t *testing.T) {
 		resUsers, _ := uu.GetAllUsers(c)
 
 		assert.Equal(t, users, resUsers)
+	})
+}
+
+func TestGetUserDetails(t *testing.T) {
+	t.Run("should return users detail when success", func(t *testing.T) {
+		ur := mocks.NewUserRepository(t)
+		wr := mocks.NewWalletRepository(t)
+		ar := mocks.NewAttemptRepository(t)
+		uu := usecase.NewUserUsecase(ur, wr, ar)
+		rec := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(rec)
+		ur.On("FindUserDetails", c, mock.Anything).Return(&userDetails, nil)
+
+		resUsers, _ := uu.GetUserDetails(c, uint(1))
+
+		assert.Equal(t, &userDetails, resUsers)
 	})
 }
 
