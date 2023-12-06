@@ -9,6 +9,8 @@ Asumsi:
 - sort pada GetTransaction, date: created_at, amount: amount, to : receiver (wallet number)
 - search menggunakan case insensitive
 
+Seeding: /sql
+
 Unit Test Coverage:
 - Handler : 100%
 - Usecase : 100%
