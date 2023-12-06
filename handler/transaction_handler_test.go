@@ -46,6 +46,16 @@ var invTopUpReq = dto.TopUpReq{
 	Amount: decimal.NewFromInt(int64(100000)),
 }
 
+var invTopUpReq2 = dto.TopUpReq{
+	Amount:       decimal.NewFromInt(int64(10)),
+	SourceOfFund: "Cash",
+}
+
+var invTopUpReq3 = dto.TopUpReq{
+	Amount:       decimal.NewFromInt(int64(100000)),
+	SourceOfFund: "Cassssh",
+}
+
 var transferReq = dto.TransferReq{
 	WalletNumber: "7000000000001",
 	Amount:       decimal.NewFromInt(int64(100000)),
@@ -54,6 +64,8 @@ var transferReq = dto.TransferReq{
 var invTransferReq = dto.TransferReq{
 	WalletNumber: "7000000000001",
 }
+
+var invTransferReq2 = dto.TransferReq{}
 
 func TestHandleGetTransactions(t *testing.T) {
 	t.Run("should return 200 if get Transactions success", func(t *testing.T) {
@@ -129,6 +141,44 @@ func TestHandleTopUp(t *testing.T) {
 		assert.Equal(t, string(resBody), util.RemoveNewLine(rec.Body.String()))
 	})
 
+	t.Run("should return 400 when invalid amount", func(t *testing.T) {
+		expectedErr := apperror.NewCustomError(http.StatusBadRequest, "invalid amount")
+		resBody, _ := json.Marshal(expectedErr.ToErrorRes())
+		param, _ := json.Marshal(invTopUpReq2)
+		tu := mocks.NewTransactionUsecase(t)
+		th := handler.NewTransactionHandler(tu)
+		opts := server.RouterOpts{
+			TransactionHandler: th,
+		}
+		r := server.NewRouter(opts)
+		rec := httptest.NewRecorder()
+
+		req, _ := http.NewRequest(http.MethodPost, "/transactions/top-up", strings.NewReader(string(param)))
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, string(resBody), util.RemoveNewLine(rec.Body.String()))
+	})
+
+	t.Run("should return 400 when invalid source of fund", func(t *testing.T) {
+		expectedErr := apperror.ErrInvalidSourceOfFund
+		resBody, _ := json.Marshal(expectedErr.ToErrorRes())
+		param, _ := json.Marshal(invTopUpReq3)
+		tu := mocks.NewTransactionUsecase(t)
+		th := handler.NewTransactionHandler(tu)
+		opts := server.RouterOpts{
+			TransactionHandler: th,
+		}
+		r := server.NewRouter(opts)
+		rec := httptest.NewRecorder()
+
+		req, _ := http.NewRequest(http.MethodPost, "/transactions/top-up", strings.NewReader(string(param)))
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, string(resBody), util.RemoveNewLine(rec.Body.String()))
+	})
+
 	t.Run("should return 500 when error in query", func(t *testing.T) {
 		expectedErr := apperror.NewCustomError(http.StatusInternalServerError, "db error")
 		resBody, _ := json.Marshal(expectedErr.ToErrorRes())
@@ -169,10 +219,29 @@ func TestHandleTransfer(t *testing.T) {
 		assert.Equal(t, string(expectedResp), util.RemoveNewLine(rec.Body.String()))
 	})
 
-	t.Run("should return 400 when invalid body", func(t *testing.T) {
+	t.Run("should return 400 when invalid amount", func(t *testing.T) {
 		expectedErr := apperror.NewCustomError(http.StatusBadRequest, "invalid amount")
 		resBody, _ := json.Marshal(expectedErr.ToErrorRes())
 		param, _ := json.Marshal(invTransferReq)
+		tu := mocks.NewTransactionUsecase(t)
+		th := handler.NewTransactionHandler(tu)
+		opts := server.RouterOpts{
+			TransactionHandler: th,
+		}
+		r := server.NewRouter(opts)
+		rec := httptest.NewRecorder()
+
+		req, _ := http.NewRequest(http.MethodPost, "/transactions/transfer", strings.NewReader(string(param)))
+		r.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+		assert.Equal(t, string(resBody), util.RemoveNewLine(rec.Body.String()))
+	})
+
+	t.Run("should return 400 when invalid body", func(t *testing.T) {
+		expectedErr := apperror.NewCustomError(http.StatusBadRequest, "invalid body")
+		resBody, _ := json.Marshal(expectedErr.ToErrorRes())
+		param, _ := json.Marshal(invTransferReq2)
 		tu := mocks.NewTransactionUsecase(t)
 		th := handler.NewTransactionHandler(tu)
 		opts := server.RouterOpts{
