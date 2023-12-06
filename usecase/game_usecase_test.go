@@ -24,10 +24,16 @@ var boxes = []dto.GameBoxesRes{
 	},
 }
 
-var wallet = model.Wallet{
+var wallet1 = model.Wallet{
 	WalletNumber: "7000000000001",
 	Balance:      decimal.NewFromInt(int64(100000)),
 	UserId:       1,
+}
+
+var wallet2 = model.Wallet{
+	WalletNumber: "7000000000002",
+	Balance:      decimal.NewFromInt(int64(0)),
+	UserId:       2,
 }
 
 var attemptRes0 = dto.AttemptRes{
@@ -74,8 +80,8 @@ func TestGetRemainingAttempt(t *testing.T) {
 		gu := usecase.NewGameUsecase(gr, wr, ar)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
-		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet, nil)
-		ar.On("FindAttempt", c, wallet).Return(&attemptRes, nil)
+		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet1, nil)
+		ar.On("FindAttempt", c, wallet1).Return(&attemptRes, nil)
 
 		resUsers, _ := gu.GetRemainingAttempt(c, uint(1))
 
@@ -106,10 +112,10 @@ func TestChooseBox(t *testing.T) {
 		gu := usecase.NewGameUsecase(gr, wr, ar)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
-		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet, nil)
+		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet1, nil)
 		gr.On("FindBoxById", c, gameBoxReq.BoxId).Return(&box, nil)
-		ar.On("FindAttempt", c, wallet).Return(&attemptRes, nil)
-		gr.On("ChooseBox", c, box, wallet).Return(&chooseBoxRes, nil)
+		ar.On("FindAttempt", c, wallet1).Return(&attemptRes, nil)
+		gr.On("ChooseBox", c, box, wallet1).Return(&chooseBoxRes, nil)
 
 		resUsers, _ := gu.ChooseBox(c, gameBoxReq, uint(1))
 
@@ -124,9 +130,9 @@ func TestChooseBox(t *testing.T) {
 		gu := usecase.NewGameUsecase(gr, wr, ar)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
-		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet, nil)
+		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet1, nil)
 		gr.On("FindBoxById", c, gameBoxReq.BoxId).Return(&box, nil)
-		ar.On("FindAttempt", c, wallet).Return(&attemptRes0, nil)
+		ar.On("FindAttempt", c, wallet1).Return(&attemptRes0, nil)
 
 		_, err := gu.ChooseBox(c, gameBoxReq, uint(1))
 
@@ -141,7 +147,7 @@ func TestChooseBox(t *testing.T) {
 		gu := usecase.NewGameUsecase(gr, wr, ar)
 		rec := httptest.NewRecorder()
 		c, _ := gin.CreateTestContext(rec)
-		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet, nil)
+		wr.On("FindWalletByUserId", c, mock.Anything).Return(&wallet1, nil)
 		gr.On("FindBoxById", c, gameBoxReq.BoxId).Return(nil, expectedErr)
 
 		_, err := gu.ChooseBox(c, gameBoxReq, uint(1))

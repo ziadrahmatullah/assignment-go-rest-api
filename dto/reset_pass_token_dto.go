@@ -23,7 +23,7 @@ type ApplyResetPassReq struct {
 func ToResetPassTokenModel(token string, id uint) *model.ResetPassToken {
 	return &model.ResetPassToken{
 		Token:  token,
-		Expire: time.Now().Add(5 * time.Minute),
+		Expire: time.Now().Add(1 * time.Minute),
 		IsUsed: false,
 		UserId: id,
 	}

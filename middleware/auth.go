@@ -12,7 +12,7 @@ import (
 
 func AuthorizeHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if gin.Mode() == gin.DebugMode {
+		if gin.Mode() == gin.TestMode {
 			return
 		}
 
@@ -54,7 +54,6 @@ func AuthorizeHandler() gin.HandlerFunc {
 			unauthorizedResponse()
 			return
 		}
-
 		ctx.Set("context", dto.RequestContext{
 			UserID: claims.ID,
 		})

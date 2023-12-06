@@ -1,7 +1,7 @@
 # assignment-go-rest-api
 
 Asumsi:
-- reset expire 5 menit
+- reset expire 1 menit
 - Saat Pembuatan user, auto generate wallet dan juga attempt row
 - pada GetTransactions jika user hanya menginput salah satu antara end dan start pada endpoint, maka error invalid filter format
 - pada GetTransactions jika user hanya meninput sort pada endpoint tanpa sortBy, maka error invalid sort format

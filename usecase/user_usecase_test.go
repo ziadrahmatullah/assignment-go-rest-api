@@ -46,7 +46,7 @@ var registerReq = []dto.RegisterReq{
 
 var registerRes = []dto.RegisterRes{
 	{
-		ID:        0,
+		ID:        1,
 		Name:      "Alice",
 		Birthdate: "2001-03-03",
 		Email:     "alice@gmail.com",
@@ -69,6 +69,12 @@ var userDetails = dto.UserDetails{
 	Email:        "alice@gmail.com",
 	WalletNumber: "7000000000001",
 	Balance:      decimal.NewFromInt(int64(100000)),
+}
+
+var newWallet = model.Wallet{
+	WalletNumber: "7000000000001",
+	Balance:      decimal.NewFromInt(int64(100000)),
+	UserId:       1,
 }
 
 func TestGetAllUsers(t *testing.T) {
@@ -126,24 +132,14 @@ func TestCreateUser(t *testing.T) {
 	// 	uu := usecase.NewUserUsecase(ur, wr, ar)
 	// 	rec := httptest.NewRecorder()
 	// 	c, _ := gin.CreateTestContext(rec)
-	// 	ur.On("FindByEmail", c, mock.Anything).Return(nil, nil)
-	// 	ur.On("NewUser", c, mock.Anything).Return(&users[0], nil)
-	// 	wr.On("NewWallet", c, mock.Anything).Return(nil, nil)
+	// 	ur.On("FindByEmail", c, registerReq[0].Email).Return(nil, nil)
+	// 	ur.On("NewUser", c, mock.Anything).Return(users[0], nil)
+	// 	wr.On("NewWallet", c, mock.Anything).Return(&newWallet, nil)
 	// 	ar.On("NewAttempt", c, mock.Anything).Return(nil, nil)
-	// 	expected := &dto.RegisterRes{
-	// 		ID:        users[0].ID,
-	// 		Name:      users[0].Name,
-	// 		Birthdate: users[0].Birthdate.Format("2006-01-02"),
-	// 		Email:     users[0].Email,
-	// 	}
+
 	// 	resUser, _ := uu.CreateUser(c, registerReq[0])
 
-	// 	assert.Equal(t, expected.ID, resUser.ID)
-	// 	assert.Equal(t, expected.Name, resUser.Name)
-	// 	assert.Equal(t, expected.Birthdate, resUser.Birthdate)
-	// 	assert.Equal(t, expected.Email, resUser.Email)
-
-	// 	assert.Equal(t, expected, resUser)
+	// 	assert.NotNil(t, resUser)
 	// })
 
 	t.Run("should return err if db error", func(t *testing.T) {
