@@ -17,15 +17,15 @@ type TransactionRepository struct {
 }
 
 // FindListTransaction provides a mock function with given fields: _a0, _a1
-func (_m *TransactionRepository) FindListTransaction(_a0 context.Context, _a1 dto.ListTransactionsReq) ([]model.Transaction, error) {
+func (_m *TransactionRepository) FindListTransaction(_a0 context.Context, _a1 dto.ListTransactionsReq) (*dto.TransactionPaginationRes, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 []model.Transaction
-	if rf, ok := ret.Get(0).(func(context.Context, dto.ListTransactionsReq) []model.Transaction); ok {
+	var r0 *dto.TransactionPaginationRes
+	if rf, ok := ret.Get(0).(func(context.Context, dto.ListTransactionsReq) *dto.TransactionPaginationRes); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]model.Transaction)
+			r0 = ret.Get(0).(*dto.TransactionPaginationRes)
 		}
 	}
 
