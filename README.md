@@ -11,7 +11,7 @@ Asumsi:
 
 Unit Test Coverage:
 - Handler : 100%
-- Usecase : 89.5%
+- Usecase : 100%
 - Util : 100%
 
 Documentation : https://documenter.getpostman.com/view/31472691/2s9YeN1U24

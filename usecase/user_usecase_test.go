@@ -44,15 +44,6 @@ var registerReq = []dto.RegisterReq{
 	},
 }
 
-var registerRes = []dto.RegisterRes{
-	{
-		ID:        1,
-		Name:      "Alice",
-		Birthdate: "2001-03-03",
-		Email:     "alice@gmail.com",
-	},
-}
-
 var loginReq = []dto.LoginReq{
 	{
 		Email:    "alice@gmail.com",
@@ -125,22 +116,57 @@ func TestCreateUser(t *testing.T) {
 		assert.ErrorIs(t, err, expectedErr)
 	})
 
-	// t.Run("should return registerRes if success", func(t *testing.T) {
-	// 	ur := mocks.NewUserRepository(t)
-	// 	wr := mocks.NewWalletRepository(t)
-	// 	ar := mocks.NewAttemptRepository(t)
-	// 	uu := usecase.NewUserUsecase(ur, wr, ar)
-	// 	rec := httptest.NewRecorder()
-	// 	c, _ := gin.CreateTestContext(rec)
-	// 	ur.On("FindByEmail", c, registerReq[0].Email).Return(nil, nil)
-	// 	ur.On("NewUser", c, mock.Anything).Return(users[0], nil)
-	// 	wr.On("NewWallet", c, mock.Anything).Return(&newWallet, nil)
-	// 	ar.On("NewAttempt", c, mock.Anything).Return(nil, nil)
+	t.Run("should return registerRes if success", func(t *testing.T) {
+		ur := mocks.NewUserRepository(t)
+		wr := mocks.NewWalletRepository(t)
+		ar := mocks.NewAttemptRepository(t)
+		uu := usecase.NewUserUsecase(ur, wr, ar)
+		rec := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(rec)
+		ur.On("FindByEmail", c, registerReq[0].Email).Return(nil, nil)
+		ur.On("NewUser", c, mock.Anything).Return(&users[0], nil)
+		wr.On("NewWallet", c, mock.Anything).Return(&newWallet, nil)
+		ar.On("NewAttempt", c, mock.Anything).Return(nil, nil)
 
-	// 	resUser, _ := uu.CreateUser(c, registerReq[0])
+		resUser, _ := uu.CreateUser(c, registerReq[0])
 
-	// 	assert.NotNil(t, resUser)
-	// })
+		assert.NotNil(t, resUser)
+	})
+
+	t.Run("should return err if new wallet query error", func(t *testing.T) {
+		expectedErr := apperror.ErrNewWalletQuery
+		ur := mocks.NewUserRepository(t)
+		wr := mocks.NewWalletRepository(t)
+		ar := mocks.NewAttemptRepository(t)
+		uu := usecase.NewUserUsecase(ur, wr, ar)
+		rec := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(rec)
+		ur.On("FindByEmail", c, registerReq[0].Email).Return(nil, nil)
+		ur.On("NewUser", c, mock.Anything).Return(&users[0], nil)
+		wr.On("NewWallet", c, mock.Anything).Return(nil, expectedErr)
+
+		_, err := uu.CreateUser(c, registerReq[0])
+
+		assert.ErrorIs(t, err, expectedErr)
+	})
+
+	t.Run("should return err if new attemp query error", func(t *testing.T) {
+		expectedErr := apperror.ErrNewAttemptQuery
+		ur := mocks.NewUserRepository(t)
+		wr := mocks.NewWalletRepository(t)
+		ar := mocks.NewAttemptRepository(t)
+		uu := usecase.NewUserUsecase(ur, wr, ar)
+		rec := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(rec)
+		ur.On("FindByEmail", c, registerReq[0].Email).Return(nil, nil)
+		ur.On("NewUser", c, mock.Anything).Return(&users[0], nil)
+		wr.On("NewWallet", c, mock.Anything).Return(&wallet1, nil)
+		ar.On("NewAttempt", c, mock.Anything).Return(nil, expectedErr)
+
+		_, err := uu.CreateUser(c, registerReq[0])
+
+		assert.ErrorIs(t, err, expectedErr)
+	})
 
 	t.Run("should return err if db error", func(t *testing.T) {
 		expectedErr := apperror.ErrNewUserQuery
