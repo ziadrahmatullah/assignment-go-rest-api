@@ -12,7 +12,7 @@ import (
 
 func AuthorizeHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if gin.Mode() == gin.TestMode {
+		if gin.Mode() == gin.DebugMode {
 			return
 		}
 
