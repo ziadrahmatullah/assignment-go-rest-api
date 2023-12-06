@@ -22,7 +22,6 @@ func NewTransactionHandler(tu usecase.TransactionUsecase) *TransactionHandler {
 }
 
 func (h *TransactionHandler) HandleGetTransactions(ctx *gin.Context) {
-	resp := dto.Response{}
 	var req dto.ListTransactionsReq
 	req.Search = util.GetStringQueryParam(ctx, "s")
 	req.FilterStart = util.GetStringQueryParam(ctx, "start")
@@ -31,13 +30,12 @@ func (h *TransactionHandler) HandleGetTransactions(ctx *gin.Context) {
 	req.SortType = util.GetStringQueryParam(ctx, "sort")
 	req.PaginationLimit = util.GetStringQueryParam(ctx, "limit")
 	req.PaginationPage = util.GetStringQueryParam(ctx, "page")
-	transactions, err := h.tu.GetTransactions(ctx, req)
+	transactionsRes, err := h.tu.GetTransactions(ctx, req)
 	if err != nil {
 		ctx.Error(err)
 		return
 	}
-	resp.Data = transactions
-	ctx.JSON(http.StatusOK, resp)
+	ctx.JSON(http.StatusOK, transactionsRes)
 }
 
 func (h *TransactionHandler) HandleTopUp(ctx *gin.Context) {
@@ -48,7 +46,7 @@ func (h *TransactionHandler) HandleTopUp(ctx *gin.Context) {
 		ctx.Error(apperror.ErrInvalidBody)
 		return
 	}
-	if topUp.SourceOfFund == string(model.Reward){
+	if topUp.SourceOfFund == string(model.Reward) {
 		ctx.Error(apperror.ErrInvalidSourceOfFund)
 		return
 	}

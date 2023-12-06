@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 	"time"
 
@@ -14,7 +15,7 @@ import (
 )
 
 type TransactionRepository interface {
-	FindListTransaction(context.Context, dto.ListTransactionsReq) ([]model.Transaction, error)
+	FindListTransaction(context.Context, dto.ListTransactionsReq) (*dto.TransactionPaginationRes, error)
 	TopUpTransaction(context.Context, model.Transaction) (*model.Transaction, error)
 	TransferTransaction(context.Context, model.Transaction) (*model.Transaction, error)
 }
@@ -40,85 +41,110 @@ func NewTransactionRepository(db *gorm.DB) TransactionRepository {
 	}
 }
 
-func (tr *transactionRepository) FindListTransaction(ctx context.Context, req dto.ListTransactionsReq) (transactions []model.Transaction, err error) {
-	raw := "SELECT * FROM transactions"
-	searchSql := tr.SearchTransaction(*req.Search)
-	filterSql, err := tr.FilterTransaction(*req.FilterStart, *req.FilterEnd, searchSql)
+func (tr *transactionRepository) FindListTransaction(ctx context.Context, req dto.ListTransactionsReq) (*dto.TransactionPaginationRes, error) {
+	raw := "SELECT * FROM transactions "
+	searchSql := tr.SearchTransaction(req.Search)
+	filterSql, err := tr.FilterTransaction(req.FilterStart, req.FilterEnd, searchSql)
 	if err != nil {
 		return nil, err
 	}
-	sortSql, err := tr.SortByTransaction(*req.SortBy, *req.SortType)
+	sortSql, err := tr.SortByTransaction(req.SortBy, req.SortType)
 	if err != nil {
 		return nil, err
 	}
-	paginationSql, err := tr.PaginationTransaction(*req.PaginationLimit, *req.PaginationPage)
+	page, limit, paginationSql, err := tr.PaginationTransaction(req.PaginationLimit, req.PaginationPage)
 	if err != nil {
 		return nil, err
 	}
+	var transactions []model.Transaction
+	var totalData int
+	rawCount := "SELECT count(*) FROM transactions " + searchSql + filterSql
 	raw += searchSql + filterSql + sortSql + paginationSql
-	err = tr.db.WithContext(ctx).Raw(raw).Scan(&transactions).Error
+	err = tr.db.WithContext(ctx).Model(&model.Transaction{}).Raw(rawCount).Scan(&totalData).Error
 	if err != nil {
 		return nil, apperror.ErrFindListTransactionQuery
 	}
-	return transactions, nil
+	err = tr.db.WithContext(ctx).Table("transactions").Raw(raw).Scan(&transactions).Error
+	if err != nil {
+		return nil, apperror.ErrFindListTransactionQuery
+	}
+	totalPage := math.Ceil(float64(totalData) / float64(limit))
+	res := &dto.TransactionPaginationRes{
+		Data:      transactions,
+		TotalData: totalData,
+		TotalPage: int(totalPage),
+		Page:      page,
+	}
+	return res, nil
 }
 
-func (tr *transactionRepository) SearchTransaction(word string) (sql string) {
-	if word == "" {
+func (tr *transactionRepository) SearchTransaction(word *string) (sql string) {
+	if word == nil || *word == "" {
 		return ""
 	}
-	raw := "%" + word + "%"
-	sql = fmt.Sprintf("WHERE description ILIKE %s", raw)
+	raw := "%" + *word + "%"
+	sql = fmt.Sprintf("WHERE description ILIKE '%s' ", raw)
 	return
 }
 
-func (tr *transactionRepository) FilterTransaction(start string, end string, prevSql string) (sql string, err error) {
-	_, err = time.Parse("2006-01-02", start)
+func (tr *transactionRepository) FilterTransaction(start, end *string, prevSql string) (sql string, err error) {
+	if start == nil || end == nil || *start == "" || *end == "" {
+		return "", nil
+	}
+	_, err = time.Parse("2006-01-02", *start)
 	if err != nil {
 		return "", apperror.ErrWrongStartDateFormat
 	}
-	_, err = time.Parse("2006-01-02", end)
+	_, err = time.Parse("2006-01-02", *end)
 	if err != nil {
 		return "", apperror.ErrWrongEndDateFormat
 	}
 	if prevSql == "" {
-		sql = fmt.Sprintf("WHERE created_at BETWEEN %s AND %s", start, end)
+		sql = fmt.Sprintf("WHERE created_at BETWEEN %s AND %s ", *start, *end)
 	} else {
-		sql = fmt.Sprintf("AND created_at BETWEEN %s AND %s", start, end)
+		sql = fmt.Sprintf("AND created_at BETWEEN %s AND %s ", *start, *end)
 	}
 	return sql, nil
 }
 
-func (tr *transactionRepository) SortByTransaction(sortByWord string, sort string) (sql string, err error) {
-	valSortBy, ok1 := sortBy[sortByWord]
-	if !ok1 {
+func (tr *transactionRepository) SortByTransaction(sortByWord, sort *string) (sql string, err error) {
+	if sortByWord == nil || *sortByWord == "" {
+		return "", nil
+	}
+	valSortBy, ok := sortBy[*sortByWord]
+	if !ok {
 		return "", apperror.ErrSortByTransactionQuery
 	}
-	valSortType, ok2 := sortType[sort]
-	if sort == "" && valSortBy != "" {
+	var valSortType string
+	if *sort == "" || sort == nil {
 		valSortType = sortType["desc"]
+	} else {
+		valSortType, ok = sortType[*sort]
+		if ok {
+			return "", apperror.ErrSortTypeTrasacntionQueqry
+		}
 	}
-	if !ok2 {
-		return "", apperror.ErrSortTypeTrasacntionQueqry
-	}
-	sql = fmt.Sprintf("ORDER BY %s %s", valSortBy, valSortType)
+	sql = fmt.Sprintf("ORDER BY %s %s ", valSortBy, valSortType)
 	return sql, nil
 }
 
-func (tr *transactionRepository) PaginationTransaction(limit string, page string) (sql string, err error) {
-	if limit == "" {
-		return fmt.Sprintf("LIMIT %d", 10), nil
+func (tr *transactionRepository) PaginationTransaction(limit, page *string) (pageRest, limitRes int, sql string, err error) {
+	intLimit := 10
+	intPage := 1
+	if limit != nil && *limit != "" {
+		intLimit, err = strconv.Atoi(*limit)
+		if err != nil {
+			return intPage, intLimit, "", apperror.ErrInvalidPagination
+		}
 	}
-	intLimit, err := strconv.Atoi(limit)
-	if err != nil {
-		return "", apperror.ErrInvalidPagination
-	}
-	intPage, err := strconv.Atoi(page)
-	if err != nil {
-		return "", apperror.ErrInvalidPagination
+	if page != nil && *page != "" {
+		intPage, err = strconv.Atoi(*page)
+		if err != nil {
+			return intPage, intLimit, "", apperror.ErrInvalidPagination
+		}
 	}
 	sql = fmt.Sprintf("LIMIT %d OFFSET %d", intLimit, (intPage-1)*intLimit)
-	return
+	return intPage, intLimit, sql, nil
 }
 
 func (tr *transactionRepository) TopUpTransaction(ctx context.Context, req model.Transaction) (transaction *model.Transaction, err error) {

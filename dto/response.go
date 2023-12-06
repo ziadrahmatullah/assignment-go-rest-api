@@ -7,6 +7,13 @@ type Response struct {
 	Data    any    `json:"data,omitempty"`
 }
 
+type TransactionPaginationRes struct {
+	Data      any `json:"data,omitempty"`
+	TotalData int `json:"total_data"`
+	TotalPage int `json:"total_page"`
+	Page      int `json:"page"`
+}
+
 type RequestContext struct {
 	UserID uint
 }
