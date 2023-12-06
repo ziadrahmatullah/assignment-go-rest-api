@@ -23,13 +23,13 @@ func NewTransactionHandler(tu usecase.TransactionUsecase) *TransactionHandler {
 
 func (h *TransactionHandler) HandleGetTransactions(ctx *gin.Context) {
 	var req dto.ListTransactionsReq
-	req.Search = util.GetStringQueryParam(ctx, "s")
-	req.FilterStart = util.GetStringQueryParam(ctx, "start")
-	req.FilterEnd = util.GetStringQueryParam(ctx, "end")
-	req.SortBy = util.GetStringQueryParam(ctx, "sortBy")
-	req.SortType = util.GetStringQueryParam(ctx, "sort")
-	req.PaginationLimit = util.GetStringQueryParam(ctx, "limit")
-	req.PaginationPage = util.GetStringQueryParam(ctx, "page")
+	req.Search = GetStringQueryParam(ctx, "s")
+	req.FilterStart = GetStringQueryParam(ctx, "start")
+	req.FilterEnd = GetStringQueryParam(ctx, "end")
+	req.SortBy = GetStringQueryParam(ctx, "sortBy")
+	req.SortType = GetStringQueryParam(ctx, "sort")
+	req.PaginationLimit = GetStringQueryParam(ctx, "limit")
+	req.PaginationPage = GetStringQueryParam(ctx, "page")
 	transactionsRes, err := h.tu.GetTransactions(ctx, req)
 	if err != nil {
 		ctx.Error(err)
@@ -84,4 +84,9 @@ func (h *TransactionHandler) HandleTransfer(ctx *gin.Context) {
 	}
 	resp.Data = transactionRes
 	ctx.JSON(http.StatusOK, resp)
+}
+
+func GetStringQueryParam(ctx *gin.Context, key string) *string {
+	value := ctx.Query(key)
+	return &value
 }

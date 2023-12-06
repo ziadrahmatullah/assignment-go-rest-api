@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 )
 
@@ -26,11 +25,6 @@ func GenerateRandomString() string {
 		panic(err)
 	}
 	return base64.StdEncoding.EncodeToString(b)
-}
-
-func GetStringQueryParam(ctx *gin.Context, key string) *string {
-	value := ctx.Query(key)
-	return &value
 }
 
 func IsTopUpAmountValid(amount decimal.Decimal) bool {
