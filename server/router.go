@@ -19,10 +19,10 @@ func NewRouter(opts RouterOpts) *gin.Engine {
 	router.ContextWithFallback = true
 
 	router.Use(gin.Recovery())
+	router.Use(middleware.Logger(logger.NewLogger()))
 	router.Use(middleware.WithTimeout)
 	router.Use(middleware.AuthorizeHandler())
 	router.Use(middleware.ErrorHandler())
-	router.Use(middleware.Logger(logger.NewLogger()))
 
 	users := router.Group("/users")
 	users.GET("", opts.UserHandler.HandleGetUsers)
