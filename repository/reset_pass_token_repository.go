@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/apperror"
 	"git.garena.com/sea-labs-id/bootcamp/batch-02/ziad-rahmatullah/assignment-go-rest-api/dto"
@@ -40,6 +41,9 @@ func (rr *resetPassTokenRepository) ApplyResetPassToken(ctx context.Context, req
 	}
 	if resetToken.User.Email != req.Email {
 		return apperror.ErrInvalidEmail
+	}
+	if resetToken.Expire.Before(time.Now()) {
+		return apperror.ErrTokenExpired
 	}
 	resetToken.User.Password = req.NewPassword
 	rr.db.WithContext(ctx).Save(&resetToken.User)

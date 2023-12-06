@@ -66,6 +66,7 @@ var (
 	ErrBoxNotFound = NewCustomError(http.StatusBadRequest, "box not found")
 
 	ErrCreateResetPassTokenQuery = NewCustomError(http.StatusInternalServerError, "create reset pass token query error")
+	ErrTokenExpired              = NewCustomError(http.StatusBadRequest, "token expired")
 
 	ErrGenerateHashPassword = NewCustomError(http.StatusInternalServerError, "couldn't generate hash password")
 	ErrGenerateJWTToken     = NewCustomError(http.StatusInternalServerError, "can't generate jwt token")
